@@ -233,6 +233,20 @@ label { display: block; font-size: .8rem; font-weight: 600;
 }
 .tab-btn svg { width: 19px; height: 19px; }
 .tab-btn.active { color: var(--ink); }
+.sidebar-header, .sidebar-footer { display: none; }
+.sidebar-header {
+  padding: 1.1rem 1.1rem .8rem; border-bottom: 1px solid var(--line);
+}
+.sidebar-header-title { font-size: 1.02rem; font-weight: 800; color: var(--ink); }
+.sidebar-header-sub { font-size: .72rem; color: var(--muted); margin-top: .1rem; }
+.sidebar-footer { padding: .7rem; border-top: 1px solid var(--line); }
+.sidebar-logout-btn {
+  width: 100%; display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .7rem; border-radius: 8px; color: var(--red-700);
+  font-size: .8rem; font-weight: 700;
+}
+.sidebar-logout-btn:active { background: var(--red-50); }
+.tab-label-desktop { display: none; }
 
 /* ── Views ───────────────────────────────────────────────────── */
 .view { display: none; padding: 1rem; padding-bottom: calc(var(--nav-h) + 2rem + env(safe-area-inset-bottom)); }
@@ -482,6 +496,10 @@ label { display: block; font-size: .8rem; font-weight: 600;
   gap: .75rem; width: auto; height: auto;
 }
 #cart-fab.visible { display: flex; }
+/* Ocultar FAB cuando el usuario ya está en la vista de pedido */
+#view-pedido.active ~ #cart-fab,
+body:has(#view-pedido.active) #cart-fab { display: none !important; }
+
 #cart-fab svg { width: 20px; height: 20px; }
 #cart-fab-count {
   position: static;
@@ -557,7 +575,7 @@ label { display: block; font-size: .8rem; font-weight: 600;
 .customer-credit-amount { font-size: .82rem; font-weight: 800; color: #16A34A; }
 .customer-modalidad-label { font-size: .65rem; color: var(--muted); }
 .customer-modalidad-value { font-size: .78rem; font-weight: 700; color: var(--ink-700); }
-.checkout-confirm-row { display: flex; gap: .55rem; margin-top: .25rem; }
+.checkout-confirm-row { display: flex; gap: .55rem; margin-top: .25rem; align-items: center; }
 .checkout-new-btn {
   width: 52px; height: 52px; flex-shrink: 0; border-radius: var(--radius-sm);
   border: 2px dashed var(--gray-200); color: var(--muted);
@@ -589,8 +607,6 @@ label { display: block; font-size: .8rem; font-weight: 600;
   border-radius: 20px; font-size: .68rem; font-weight: 700;
   letter-spacing: .04em;
 }
-.badge-pending  { background: var(--amber-lt); color: var(--amber); }
-.badge-route    { background: #EEF4FF; color: #2563EB; }
 .badge-done     { background: var(--green-lt); color: var(--green); }
 
 /* ── Orders Admin ────────────────────────────────────────────── */
@@ -608,6 +624,35 @@ label { display: block; font-size: .8rem; font-weight: 600;
 .order-admin-actions { display: flex; gap: .5rem; margin-top: .65rem; }
 
 /* ── Stock Editor ────────────────────────────────────────────── */
+.stock-card {
+  background: var(--gray-50); border-radius: 12px;
+  padding: .85rem .9rem; margin-bottom: .6rem;
+}
+.stock-card:last-child { margin-bottom: 0; }
+.stock-card-top { display: flex; align-items: flex-start; gap: .6rem; margin-bottom: .65rem; }
+.stock-card-emoji { font-size: 1.5rem; flex-shrink: 0; line-height: 1.2; }
+.stock-card-title { flex: 1; min-width: 0; }
+.stock-card-name { font-size: .87rem; font-weight: 700; color: var(--gray-800); }
+.stock-card-meta { font-size: .7rem; color: var(--gray-400); margin-top: .2rem; }
+.stock-estatus-pill {
+  font-size: .64rem; font-weight: 800; letter-spacing: .02em;
+  padding: .22rem .6rem; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+}
+.stock-card-grid {
+  display: grid; grid-template-columns: .85fr 1.15fr; gap: .8rem;
+  padding: .7rem 0; margin-bottom: .65rem;
+  border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);
+}
+.stock-field-label {
+  font-size: .6rem; font-weight: 800; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--gray-400); margin-bottom: .3rem;
+}
+.stock-field-value { font-size: 1.25rem; font-weight: 900; color: var(--gray-800); line-height: 1; }
+.stock-level-track { height: 5px; background: var(--gray-200); border-radius: 99px; overflow: hidden; margin-top: .5rem; }
+.stock-level-fill  { height: 100%; border-radius: 99px; }
+.stock-price-lines { font-size: .78rem; color: var(--gray-600); line-height: 1.55; }
+.stock-price-lines b { color: var(--gray-800); font-weight: 800; }
+.stock-card-actions { display: flex; gap: .4rem; align-items: center; }
 .stock-item {
   display: flex; align-items: center; gap: .6rem;
   padding: .65rem 0; border-bottom: 1px solid var(--gray-100);
@@ -895,17 +940,223 @@ label { display: block; font-size: .8rem; font-weight: 600;
 .kpi-value { font-size: 1.35rem; font-weight: 900; color: var(--gray-800); line-height: 1.1; }
 .kpi-sub   { font-size: .68rem; color: var(--gray-400); margin-top: .18rem; }
 
+/* ── Admin Dashboard — Estilo Stitch móvil ───────────────────── */
+.dash-header-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 1rem .4rem; gap: .5rem;
+}
+.dash-ops-live {
+  display: flex; align-items: center; gap: .35rem;
+  font-size: .7rem; font-weight: 800; color: #16A34A;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.dash-ops-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #22C55E;
+  box-shadow: 0 0 0 3px rgba(34,197,94,.22);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity:1; } 50% { opacity:.4; }
+}
+.dash-date-label { font-size: .72rem; color: var(--gray-400); font-weight: 600; }
+.dash-panel-title {
+  font-size: 1.55rem; font-weight: 900; color: var(--gray-900);
+  letter-spacing: -.02em; line-height: 1.1; padding: 0 1rem .1rem;
+}
+.dash-panel-sub { font-size: .75rem; color: var(--gray-400); padding: 0 1rem .85rem; }
+
+/* Botón + Gasto */
+.dash-gasto-btn {
+  background: var(--red-700); color: var(--white);
+  border-radius: 10px; padding: .52rem .9rem;
+  font-size: .8rem; font-weight: 800;
+  display: flex; align-items: center; gap: .35rem; flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(192,20,26,.3);
+}
+
+/* Cards de KPI principales — 2 columnas */
+.dash-kpi-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: .65rem; padding: 0 1rem .75rem;
+}
+.dash-kpi-card {
+  background: var(--white); border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.04);
+  padding: 1rem;
+}
+.dash-kpi-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: .4rem;
+}
+.dash-kpi-label {
+  font-size: .67rem; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--gray-400); line-height: 1.3;
+}
+.dash-kpi-icon-box {
+  width: 30px; height: 30px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .95rem; flex-shrink: 0;
+}
+.dash-kpi-icon-box.green  { background: #DCFCE7; }
+.dash-kpi-icon-box.purple { background: #EDE9FE; }
+.dash-kpi-icon-box.blue   { background: #DBEAFE; }
+.dash-kpi-icon-box.red    { background: #FEE2E2; }
+.dash-kpi-icon-box.amber  { background: #FEF3C7; }
+.dash-kpi-value {
+  font-size: 1.45rem; font-weight: 900; color: var(--gray-900);
+  line-height: 1.1; letter-spacing: -.01em;
+}
+.dash-kpi-sub { font-size: .7rem; color: var(--gray-400); margin-top: .3rem; }
+.dash-kpi-badge {
+  display: inline-flex; align-items: center; gap: .25rem;
+  font-size: .68rem; font-weight: 700; padding: .18rem .5rem;
+  border-radius: 20px; margin-top: .3rem;
+}
+.dash-kpi-badge.up   { background: #DCFCE7; color: #15803D; }
+.dash-kpi-badge.gray { background: #F3F4F6; color: #6B7280; }
+
+/* Card Utilidad Neta — ancho completo */
+.dash-utilidad-card {
+  background: var(--white); border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.04);
+  padding: 1rem; margin: 0 1rem .75rem;
+}
+.dash-utilidad-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .35rem; gap: .5rem;
+}
+.dash-utilidad-label {
+  font-size: .7rem; font-weight: 700; color: var(--gray-400);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.dash-utilidad-badge-optimo {
+  background: #DCFCE7; color: #15803D;
+  font-size: .65rem; font-weight: 800; padding: .18rem .5rem;
+  border-radius: 20px;
+}
+.dash-utilidad-fletes {
+  font-size: .75rem; font-weight: 700; color: #DC2626;
+}
+.dash-utilidad-value {
+  font-size: 1.65rem; font-weight: 900; color: var(--gray-900);
+  letter-spacing: -.02em; line-height: 1;
+}
+.dash-utilidad-currency {
+  font-size: .75rem; font-weight: 600; color: var(--gray-400); margin-left: .3rem;
+}
+.dash-utilidad-bar-wrap {
+  height: 6px; background: #E5E7EB; border-radius: 99px; margin-top: .65rem; overflow: hidden;
+}
+.dash-utilidad-bar {
+  height: 100%; background: linear-gradient(90deg, #16A34A, #22C55E);
+  border-radius: 99px; transition: width .6s ease;
+}
+
+/* Card Pedidos de Hoy */
+.dash-pedidos-card {
+  background: var(--white); border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.04);
+  padding: 1rem; margin: 0 1rem .75rem;
+}
+.dash-pedidos-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .65rem;
+}
+.dash-pedidos-title {
+  display: flex; align-items: center; gap: .45rem;
+  font-size: .82rem; font-weight: 700; color: var(--gray-700);
+}
+.dash-pedidos-count {
+  font-size: 1.15rem; font-weight: 900; color: var(--gray-900);
+}
+
+/* Stock Crítico */
+.dash-stock-section { padding: 0 1rem .75rem; }
+.dash-stock-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .65rem;
+}
+.dash-stock-title {
+  display: flex; align-items: center; gap: .45rem;
+  font-size: 1rem; font-weight: 900; color: var(--gray-900);
+}
+.dash-urgentes-pill {
+  background: #FEF3C7; color: #B45309;
+  font-size: .68rem; font-weight: 800; padding: .2rem .6rem; border-radius: 20px;
+}
+.dash-critical-item {
+  display: flex; align-items: center; gap: .75rem;
+  background: var(--white); border-radius: 12px; padding: .75rem;
+  border: 1.5px solid var(--border); margin-bottom: .55rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.dash-critical-emoji {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--gray-100); display: flex; align-items: center;
+  justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+}
+.dash-critical-info { flex: 1; min-width: 0; }
+.dash-critical-name { font-size: .84rem; font-weight: 800; color: var(--gray-900); }
+.dash-critical-min  { font-size: .7rem; color: var(--gray-400); margin-top: .1rem; }
+.dash-critical-stock {
+  display: flex; align-items: center; gap: .3rem;
+  font-size: .72rem; font-weight: 700; margin-top: .2rem;
+}
+.dash-critical-stock.crit { color: #DC2626; }
+.dash-critical-stock.low  { color: #D97706; }
+.dash-critical-stock-dot {
+  width: 7px; height: 7px; border-radius: 50; flex-shrink: 0;
+}
+.dash-critical-stock.crit .dash-critical-stock-dot { background: #DC2626; }
+.dash-critical-stock.low  .dash-critical-stock-dot { background: #D97706; }
+.dash-pedir-btn {
+  background: var(--gray-100); color: var(--gray-800);
+  border-radius: 8px; padding: .4rem .65rem;
+  font-size: .75rem; font-weight: 800; flex-shrink: 0;
+  border: 1.5px solid var(--border);
+  white-space: nowrap;
+}
+.dash-pedir-btn:active { background: var(--gray-200); }
+
+/* Tabla de ops — más compacta en mobile */
+.dash-ops-section { padding: 0 1rem .75rem; }
+.dash-ops-title {
+  font-size: .82rem; font-weight: 800; color: var(--gray-700);
+  margin-bottom: .55rem;
+  display: flex; align-items: center; gap: .4rem;
+}
+.dash-orders-table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+.dash-orders-table th {
+  text-align: left; font-size: .62rem; font-weight: 800; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--gray-400); padding: 0 .5rem .5rem; white-space: nowrap;
+}
+.dash-orders-table td {
+  padding: .6rem .5rem; border-top: 1px solid var(--gray-100); vertical-align: middle;
+}
+.dash-orders-table .order-folio { font-weight: 800; color: var(--red-700); font-size: .78rem; }
+.dash-orders-table .order-hora  { font-size: .68rem; color: var(--gray-400); }
+.dash-orders-table .order-amt   { font-weight: 800; }
+.dash-order-print-btn {
+  background: var(--gray-50); color: var(--gray-700); border: 1px solid var(--gray-200);
+  border-radius: 8px; padding: .35rem .6rem; font-size: .72rem; font-weight: 700; white-space: nowrap;
+}
+.dash-count-pill {
+  margin-left: auto; background: #FEE2E2; color: #B91C1C;
+  font-size: .68rem; font-weight: 800; padding: .15rem .55rem; border-radius: 20px;
+}
+
 .gasto-item {
-  display: flex; align-items: center; gap: .6rem;
-  padding: .55rem 0; border-bottom: 1px solid var(--gray-100);
+  display: flex; align-items: flex-start; gap: .6rem;
+  padding: .65rem 0; border-bottom: 1px solid var(--gray-100);
 }
 .gasto-item:last-child { border-bottom: none; }
-.gasto-cat-dot {
-  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+.gasto-cat-pill {
+  display: inline-block; font-size: .66rem; font-weight: 800;
+  padding: .18rem .5rem; border-radius: 20px; white-space: nowrap;
 }
-.gasto-desc { flex: 1; font-size: .83rem; font-weight: 600; }
+.gasto-desc { font-size: .83rem; font-weight: 700; margin-top: .3rem; }
 .gasto-meta { font-size: .7rem; color: var(--gray-400); }
-.gasto-amount { font-size: .9rem; font-weight: 800; color: var(--red-700); white-space: nowrap; }
+.gasto-amount { font-size: .92rem; font-weight: 800; color: var(--gray-800); white-space: nowrap; }
 .gasto-del-btn {
   background: var(--red-100); color: var(--red-700);
   border-radius: 6px; padding: .25rem .45rem; font-size: .75rem; font-weight: 700;
@@ -925,17 +1176,16 @@ label { display: block; font-size: .8rem; font-weight: 600;
 
 .resumen-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: .5rem 0; border-bottom: 1px solid var(--gray-100); font-size: .85rem;
+  padding: .55rem 0; border-bottom: 1px solid var(--gray-100); font-size: .85rem;
 }
 .resumen-row:last-child { border-bottom: none; }
 .resumen-row.total-row {
-  border-top: 2px solid var(--gray-200); border-bottom: none;
-  padding-top: .65rem; margin-top: .15rem;
+  border-top: none; border-bottom: none;
+  background: var(--gray-50); border-radius: 12px;
+  padding: .9rem .85rem; margin-top: .6rem;
   font-weight: 900; font-size: 1rem;
 }
-.resumen-row.total-row .resumen-val { color: var(--green); }
-.resumen-row.total-row.negative .resumen-val { color: var(--red-700); }
-.resumen-label { color: var(--gray-600); }
+.resumen-label { color: var(--gray-600); display: flex; align-items: center; }
 .resumen-val   { font-weight: 700; }
 
 .period-bar {
@@ -945,14 +1195,29 @@ label { display: block; font-size: .8rem; font-weight: 600;
   flex: 1; font-size: .8rem; padding: .5rem .65rem;
 }
 
-.bar-chart-wrap { margin: .4rem 0 .2rem; }
-.bar-row {
-  display: flex; align-items: center; gap: .5rem; margin-bottom: .45rem;
+.gastocat-grid { display: flex; flex-direction: column; gap: .65rem; }
+.gastocat-card { background: var(--gray-50); border-radius: 12px; padding: .8rem .9rem; }
+.gastocat-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .5rem; gap: .5rem; }
+.gastocat-name { font-size: .84rem; font-weight: 700; color: var(--gray-800); }
+.gastocat-amt  { font-size: .95rem; font-weight: 900; color: var(--gray-800); white-space: nowrap; }
+.gastocat-track { height: 7px; background: var(--gray-200); border-radius: 99px; overflow: hidden; }
+.gastocat-fill  { height: 100%; border-radius: 99px; transition: width .4s ease; }
+.gastocat-pct   { font-size: .7rem; color: var(--gray-400); font-weight: 600; margin-top: .4rem; text-align: right; }
+
+.resumen-highlight-grid { display: flex; flex-direction: column; gap: .6rem; margin-bottom: 1rem; }
+.resumen-highlight-card { background: var(--gray-50); border-radius: 12px; padding: .85rem .9rem; }
+.resumen-highlight-label {
+  font-size: .66rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--gray-400); margin-bottom: .4rem; display: flex; align-items: center; gap: .35rem;
 }
-.bar-label { font-size: .72rem; color: var(--gray-600); width: 70px; flex-shrink: 0; text-align: right; }
-.bar-track { flex: 1; background: var(--gray-100); border-radius: 4px; height: 18px; overflow: hidden; }
-.bar-fill  { height: 100%; border-radius: 4px; transition: width .4s ease; }
-.bar-val   { font-size: .72rem; font-weight: 700; color: var(--gray-600); width: 60px; flex-shrink: 0; }
+.resumen-highlight-headline { font-size: 1rem; font-weight: 900; color: var(--gray-800); margin-bottom: .3rem; }
+.resumen-highlight-desc { font-size: .76rem; color: var(--gray-500); line-height: 1.4; }
+
+.resumen-icon-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 7px; font-size: .8rem;
+  margin-right: .55rem; flex-shrink: 0;
+}
 
 /* ── Historial card ──────────────────────────────────────────── */
 .historial-card {
@@ -960,9 +1225,7 @@ label { display: block; font-size: .8rem; font-weight: 600;
   box-shadow: var(--shadow-sm); margin-bottom: .7rem;
   overflow: hidden; border-left: 4px solid var(--gray-200);
 }
-.historial-card.status-Pendiente  { border-left-color: var(--amber); }
-.historial-card.status-En-ruta    { border-left-color: #2563EB; }
-.historial-card.status-Entregado  { border-left-color: var(--green); }
+.historial-card { border-left-color: var(--green); }
 .historial-head {
   padding: .7rem .9rem .4rem;
   display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem;
@@ -1121,7 +1384,6 @@ label { display: block; font-size: .8rem; font-weight: 600;
   overflow:hidden; border-left:5px solid var(--red-600);
 }
 .ticket-card.status-entregado { border-left-color:var(--green); }
-.ticket-card.status-ruta      { border-left-color:#2563EB; }
 .ticket-head {
   display:flex; align-items:flex-start; justify-content:space-between;
   padding:.75rem 1rem .5rem; gap:.5rem;
@@ -1255,7 +1517,52 @@ label { display: block; font-size: .8rem; font-weight: 600;
 }
 .stats-row:last-child { border-bottom: none; }
 .stats-label { color: var(--gray-600); }
-.stats-val { font-weight: 700; }
+/* ── Admin Desktop: layout tipo sidebar (solo admin, pantallas ≥1024px) ── */
+@media (min-width: 1024px) {
+  body.role-admin #app-header { margin-left: 240px; }
+  body.role-admin #tab-bar {
+    top: 0; bottom: 0; left: 0; right: auto;
+    width: 240px; flex-direction: column; align-items: stretch;
+    border-top: none; border-right: 1px solid var(--line);
+    box-shadow: 2px 0 12px rgba(0,0,0,.04);
+    padding-bottom: 0; overflow-y: auto;
+  }
+  body.role-admin .sidebar-header { display: block; }
+  body.role-admin .sidebar-footer { display: block; margin-top: auto; }
+  body.role-admin #tab-bar .tab-btn {
+    flex-direction: row; justify-content: flex-start; align-items: center;
+    gap: .7rem; padding: .7rem 1.1rem; font-size: .78rem; font-weight: 700;
+    min-width: 0; text-transform: none; letter-spacing: 0;
+  }
+  body.role-admin #tab-bar .tab-btn svg { width: 18px; height: 18px; }
+  body.role-admin #tab-bar .tab-btn.active {
+    background: var(--red-50); color: var(--red-700);
+    box-shadow: inset 3px 0 0 var(--red-700);
+  }
+  body.role-admin .tab-label-mobile  { display: none; }
+  body.role-admin .tab-label-desktop { display: inline; }
+  body.role-admin .view {
+    margin-left: 240px; padding: 1.4rem 1.8rem 2.2rem; max-width: 1480px;
+  }
+  body.role-admin .dash-main-grid { grid-template-columns: 360px 1fr; align-items: start; }
+  body.role-admin .dash-kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 0 .85rem;
+  }
+  /* En desktop el dashboard tiene padding normal como el resto de views */
+  body.role-admin #admin-subview-dashboard { padding: 0; }
+  body.role-admin .dash-header-bar { padding: 0 0 .5rem; }
+  body.role-admin .dash-panel-title { padding: 0; font-size: 1.75rem; }
+  body.role-admin .dash-panel-sub   { padding: .1rem 0 1rem; }
+  body.role-admin .dash-utilidad-card { margin: 0 0 .85rem; }
+  body.role-admin .dash-pedidos-card  { margin: 0 0 .85rem; }
+  body.role-admin .dash-stock-section { padding: 0 0 .85rem; }
+  body.role-admin .dash-ops-section   { padding: 0 0 .85rem; }
+  /* Grid 2 col para las secciones de abajo */
+  body.role-admin .dash-bottom-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start;
+  }
+}
 </style>
 </head>
 <body>
@@ -1377,9 +1684,13 @@ label { display: block; font-size: .8rem; font-weight: 600;
      TAB BAR
 ══════════════════════════════════════════════════════════════ -->
 <nav id="tab-bar" style="display:none;">
+  <div class="sidebar-header">
+    <div class="sidebar-header-title">Panel Central</div>
+    <div class="sidebar-header-sub">Administración &amp; Control</div>
+  </div>
   <button class="tab-btn active" data-tab="clientes" onclick="switchTab('clientes')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-    CLIENTES
+    <span class="tab-label-mobile">CLIENTES</span><span class="tab-label-desktop">Configuración</span>
   </button>
   <button class="tab-btn" data-tab="catalogo" onclick="switchTab('catalogo')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -1393,26 +1704,36 @@ label { display: block; font-size: .8rem; font-weight: 600;
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
     HISTORIAL
   </button>
+  <button class="tab-btn" data-tab="admin" data-admin-sub="dashboard" onclick="switchTab('admin','dashboard')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span class="tab-label-mobile">DASHBOARD</span><span class="tab-label-desktop">Dashboard</span>
+  </button>
   <button class="tab-btn" data-tab="admin" data-admin-sub="productos" onclick="switchTab('admin','productos')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-    PRODUCTOS
+    <span class="tab-label-mobile">PRODUCTOS</span><span class="tab-label-desktop">Inventario &amp; SKUs</span>
   </button>
   <button class="tab-btn" data-tab="admin" data-admin-sub="pedidos" onclick="switchTab('admin','pedidos')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
-    PEDIDOS
+    <span class="tab-label-mobile">PEDIDOS</span><span class="tab-label-desktop">Pedidos &amp; Rutas</span>
   </button>
   <button class="tab-btn" data-tab="admin" data-admin-sub="tickets" onclick="switchTab('admin','tickets')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9a3 3 0 010-6h18a3 3 0 010 6 3 3 0 000 6 3 3 0 010 6H3a3 3 0 010-6 3 3 0 000-6z"/><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2,2"/></svg>
     TICKETS
   </button>
-  <button class="tab-btn" data-tab="admin" data-admin-sub="stats" onclick="switchTab('admin','stats')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    STATS
-  </button>
   <button class="tab-btn" data-tab="caja" onclick="switchTab('caja')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-    CAJA
+    <span class="tab-label-mobile">CAJA</span><span class="tab-label-desktop">Finanzas &amp; Gastos</span>
   </button>
+  <button class="tab-btn" data-tab="admin" data-admin-sub="stats" onclick="switchTab('admin','stats')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span class="tab-label-mobile">STATS</span><span class="tab-label-desktop">Reportes &amp; BI</span>
+  </button>
+  <div class="sidebar-footer">
+    <button class="sidebar-logout-btn" onclick="doLogout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Cerrar Sesión
+    </button>
+  </div>
 </nav>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -1571,8 +1892,6 @@ label { display: block; font-size: .8rem; font-weight: 600;
 ══════════════════════════════════════════════════════════════ -->
 <section class="view" id="view-pedido">
 
-  <div id="cart-closed-banner" style="display:none;text-align:center;background:#fee2e2;border:1.5px solid #ef4444;color:#991b1b;border-radius:12px;padding:.9rem 1rem;margin-bottom:.85rem;"></div>
-
   <div class="card" id="cart-summary-card">
     <div class="card-title">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
@@ -1631,13 +1950,6 @@ label { display: block; font-size: .8rem; font-weight: 600;
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
       Pedidos de hoy (mi ruta)
     </div>
-    <!-- Filtro de status -->
-    <div style="display:flex;gap:.4rem;margin-bottom:.85rem;overflow-x:auto;padding-bottom:.2rem;">
-      <button class="caja-tab active" onclick="setHistorialFilter('todos',this)">Todos</button>
-      <button class="caja-tab" onclick="setHistorialFilter('Pendiente',this)">Pendientes</button>
-      <button class="caja-tab" onclick="setHistorialFilter('En ruta',this)">En ruta</button>
-      <button class="caja-tab" onclick="setHistorialFilter('Entregado',this)">Entregados</button>
-    </div>
     <div id="historial-list"><div class="empty-state"><p>Sin pedidos aún.</p></div></div>
   </div>
 
@@ -1650,7 +1962,10 @@ label { display: block; font-size: .8rem; font-weight: 600;
 
   <!-- Sub-tabs de Admin (oculto: ahora viven en el tab-bar principal) -->
   <div class="admin-subtab-bar" style="display:none;">
-    <button class="admin-subtab-btn active" data-sub="productos" onclick="switchAdminTab('productos',this)">
+    <button class="admin-subtab-btn active" data-sub="dashboard" onclick="switchAdminTab('dashboard',this)">
+      📊 Dashboard
+    </button>
+    <button class="admin-subtab-btn" data-sub="productos" onclick="switchAdminTab('productos',this)">
       📦 Productos
     </button>
     <button class="admin-subtab-btn" data-sub="pedidos" onclick="switchAdminTab('pedidos',this)">
@@ -1661,8 +1976,163 @@ label { display: block; font-size: .8rem; font-weight: 600;
     </button>
   </div>
 
+  <!-- ── SUB-VIEW: DASHBOARD ─────────────────────────────────── -->
+  <div class="admin-subview active" id="admin-subview-dashboard" style="padding:0;">
+
+    <!-- Header del panel -->
+    <div class="dash-header-bar">
+      <div class="dash-ops-live">
+        <span class="dash-ops-dot"></span>
+        Operaciones en vivo
+      </div>
+      <span class="dash-date-label" id="dash-fecha-label"></span>
+    </div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:0 1rem .5rem;gap:.5rem;">
+      <div>
+        <div class="dash-panel-title" style="padding:0;">Panel Gerencial</div>
+        <div class="dash-panel-sub" style="padding:.1rem 0 0;">Supervisión financiera y logística</div>
+      </div>
+      <button class="dash-gasto-btn" onclick="switchTab('caja')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        + Gasto
+      </button>
+    </div>
+
+    <!-- KPI 2x2: Ventas + Ganancia -->
+    <div class="dash-kpi-grid">
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-top">
+          <span class="dash-kpi-label">Ventas<br>Cobradas</span>
+          <div class="dash-kpi-icon-box green">💳</div>
+        </div>
+        <div class="dash-kpi-value" id="dash-kpi-ventas">$0</div>
+        <div class="dash-kpi-badge up" id="dash-kpi-ventas-badge">
+          ↑ 0 pedidos entregados
+        </div>
+      </div>
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-top">
+          <span class="dash-kpi-label">Ganancia<br>Bruta</span>
+          <div class="dash-kpi-icon-box purple">📈</div>
+        </div>
+        <div class="dash-kpi-value" id="dash-kpi-ganancia">$0</div>
+        <div class="dash-kpi-badge gray" id="dash-kpi-margen-badge">Margen 0%</div>
+      </div>
+    </div>
+
+    <!-- Utilidad Neta — full width -->
+    <div class="dash-utilidad-card">
+      <div class="dash-utilidad-row">
+        <div style="display:flex;align-items:center;gap:.5rem;">
+          <span class="dash-utilidad-label">Utilidad Neta (Caja Real)</span>
+          <span class="dash-utilidad-badge-optimo" id="dash-utilidad-badge">Óptimo</span>
+        </div>
+        <span class="dash-utilidad-fletes" id="dash-fletes-label"></span>
+      </div>
+      <div>
+        <span class="dash-utilidad-value" id="dash-kpi-utilidad">$0.00</span>
+        <span class="dash-utilidad-currency">MXN</span>
+      </div>
+      <div class="dash-utilidad-bar-wrap">
+        <div class="dash-utilidad-bar" id="dash-utilidad-bar" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <!-- Pedidos de Hoy -->
+    <div class="dash-pedidos-card">
+      <div class="dash-pedidos-row">
+        <div class="dash-pedidos-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="17" height="17"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Pedidos de Hoy
+        </div>
+        <span class="dash-pedidos-count"><span id="dash-kpi-pedidos">0</span> órdenes</span>
+      </div>
+    </div>
+
+    <!-- Bottom grid: Stock + Tabla (2 cols en desktop) -->
+    <div class="dash-bottom-grid">
+
+    <!-- Stock Crítico -->
+    <div class="dash-stock-section">
+      <div class="dash-stock-header">
+        <div class="dash-stock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" width="20" height="20"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Stock Crítico en Bodega
+        </div>
+        <span class="dash-urgentes-pill" id="dash-critical-count">0 Urgentes</span>
+      </div>
+      <div id="dash-critical-list">
+        <div class="empty-state" style="padding:1rem 0;"><p>Sin productos en nivel crítico. 🎉</p></div>
+      </div>
+    </div>
+
+    <!-- Tabla operaciones -->
+    <div class="dash-ops-section">
+      <div class="dash-ops-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Pedidos Recientes de Hoy
+      </div>
+      <div style="overflow-x:auto;background:var(--white);border-radius:12px;border:1.5px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.05);">
+        <table class="dash-orders-table">
+          <thead>
+            <tr>
+              <th style="padding:.6rem .7rem;">Folio</th>
+              <th>Cliente</th>
+              <th>Vendedor</th>
+              <th>Importe</th>
+              <th>Estatus</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="dash-orders-tbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--gray-400);padding:1.5rem 0;">Sin pedidos hoy.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    </div><!-- /dash-bottom-grid -->
+
+  </div><!-- /admin-subview-dashboard -->
+
   <!-- ── SUB-VIEW: PRODUCTOS ─────────────────────────────────── -->
-  <div class="admin-subview active" id="admin-subview-productos">
+  <div class="admin-subview" id="admin-subview-productos">
+
+    <!-- KPIs de inventario -->
+    <div class="kpi-grid" id="inventario-kpis">
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-top">
+          <span class="dash-kpi-label">SKUs<br>Activos</span>
+          <div class="dash-kpi-icon-box green">📦</div>
+        </div>
+        <div class="dash-kpi-value">0</div>
+        <div class="dash-kpi-badge up">0% disponibilidad</div>
+      </div>
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-top">
+          <span class="dash-kpi-label">Stock Crítico<br>/ Cero</span>
+          <div class="dash-kpi-icon-box red">🛒</div>
+        </div>
+        <div class="dash-kpi-value">0</div>
+        <div class="dash-kpi-badge" style="background:#FEE2E2;color:#B91C1C;">Requiere reorden</div>
+      </div>
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-top">
+          <span class="dash-kpi-label">Pendientes<br>Verificación</span>
+          <div class="dash-kpi-icon-box amber">⚠</div>
+        </div>
+        <div class="dash-kpi-value">0</div>
+        <div class="dash-kpi-badge" style="background:#FEF3C7;color:#92400E;">Producto pesado</div>
+      </div>
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-top">
+          <span class="dash-kpi-label">Valor del<br>Inventario</span>
+          <div class="dash-kpi-icon-box purple">💰</div>
+        </div>
+        <div class="dash-kpi-value">$0</div>
+        <div class="dash-kpi-badge gray">a costo de compra</div>
+      </div>
+    </div>
 
     <!-- Stock bajo — alerta automática -->
     <div class="stock-alert-banner" id="stock-alert-banner">
@@ -1764,7 +2234,7 @@ label { display: block; font-size: .8rem; font-weight: 600;
         </div>
         <label style="display:flex;align-items:center;gap:.5rem;font-weight:600;cursor:pointer;">
           <input type="checkbox" id="new-prod-pesado" style="width:18px;height:18px;accent-color:var(--red-700);" />
-          ⚠ Producto pesado / "Pendiente" (aparece en el resumen de carga para el repartidor)
+          ⚠ Producto pesado (aparece en el resumen de carga del día)
         </label>
         <button class="btn btn-primary" onclick="addProduct()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1851,23 +2321,6 @@ label { display: block; font-size: .8rem; font-weight: 600;
 
   <!-- ── SUB-VIEW: PEDIDOS ───────────────────────────────────── -->
   <div class="admin-subview" id="admin-subview-pedidos">
-    <div class="card" id="order-schedule-card" style="background:#f0fdf4;border:1.5px solid #86efac;">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Horario de pedidos
-      </div>
-      <div id="order-schedule-status" style="font-size:.85rem;margin-bottom:.7rem;"></div>
-      <div class="form-row-2">
-        <div>
-          <label>Hora de corte (las tiendas ya no pueden pedir después)</label>
-          <input type="time" id="order-schedule-hora" onchange="setHoraCierre(this.value)" />
-        </div>
-        <div style="display:flex;align-items:flex-end;">
-          <button class="btn btn-secondary" id="order-schedule-toggle-btn" style="width:100%;"></button>
-        </div>
-      </div>
-    </div>
-
     <div class="section-label">Pedidos recibidos</div>
     <div id="orders-admin-list"><div class="spinner"></div></div>
   </div><!-- /admin-subview-pedidos -->
@@ -1880,11 +2333,8 @@ label { display: block; font-size: .8rem; font-weight: 600;
         Imprimir tickets
       </div>
       <div class="tickets-toolbar">
-        <select id="ticket-filter-status" onchange="renderTickets()">
+        <select id="ticket-filter-status" style="display:none;">
           <option value="">Todos los estados</option>
-          <option value="Pendiente">Pendiente</option>
-          <option value="En ruta">En ruta</option>
-          <option value="Entregado">Entregado</option>
         </select>
         <select id="ticket-filter-store" onchange="renderTickets()">
           <option value="">Todas las tiendas</option>
@@ -1913,7 +2363,7 @@ label { display: block; font-size: .8rem; font-weight: 600;
       <div class="card" id="pendientes-summary-card" style="display:none;background:#fff7ed;border:1.5px solid #f59e0b;">
         <div class="card-title" style="color:#92400e;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          Resumen de Pendientes (juntar para repartidor)
+          Resumen de Productos Pesados (a cargar hoy)
         </div>
         <div id="pendientes-summary-list"></div>
         <button class="btn btn-secondary" style="margin-top:.6rem;" onclick="printPendientesSummary()">
@@ -1976,11 +2426,38 @@ label { display: block; font-size: .8rem; font-weight: 600;
 
   <!-- KPIs -->
   <div class="kpi-grid" id="caja-kpis">
-    <div class="kpi-card green"><div class="kpi-label">Ventas</div><div class="kpi-value">$0</div><div class="kpi-sub">pedidos entregados</div></div>
-    <div class="kpi-card"><div class="kpi-label">Gastos</div><div class="kpi-value">$0</div><div class="kpi-sub">egresos del período</div></div>
-    <div class="kpi-card purple"><div class="kpi-label">Ganancia bruta</div><div class="kpi-value">$0</div><div class="kpi-sub">venta − costo producto</div></div>
-    <div class="kpi-card blue"><div class="kpi-label">Utilidad neta</div><div class="kpi-value">$0</div><div class="kpi-sub">bruta − gastos</div></div>
-    <div class="kpi-card amber"><div class="kpi-label">Pendiente cobrar</div><div class="kpi-value">$0</div><div class="kpi-sub">pedidos pendientes</div></div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Ventas<br>Cobradas</span>
+        <div class="dash-kpi-icon-box green">💳</div>
+      </div>
+      <div class="dash-kpi-value">$0</div>
+      <div class="dash-kpi-badge up">0 pedidos entregados</div>
+    </div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Total<br>Gastos</span>
+        <div class="dash-kpi-icon-box red">🧾</div>
+      </div>
+      <div class="dash-kpi-value">$0</div>
+      <div class="dash-kpi-badge gray">0 egresos</div>
+    </div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Ganancia<br>Bruta</span>
+        <div class="dash-kpi-icon-box purple">📈</div>
+      </div>
+      <div class="dash-kpi-value">$0</div>
+      <div class="dash-kpi-badge gray">venta − costo producto</div>
+    </div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Utilidad<br>Neta</span>
+        <div class="dash-kpi-icon-box blue">🏦</div>
+      </div>
+      <div class="dash-kpi-value">$0</div>
+      <div class="dash-kpi-badge gray">bruta − gastos</div>
+    </div>
   </div>
 
   <!-- Resumen detallado -->
@@ -1998,7 +2475,7 @@ label { display: block; font-size: .8rem; font-weight: 600;
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       Gastos por categoría
     </div>
-    <div class="bar-chart-wrap" id="caja-gastos-chart"></div>
+    <div id="caja-gastos-chart"></div>
   </div>
 
   <!-- Registrar gasto -->
@@ -2114,6 +2591,7 @@ function switchAdminTab(tab, btn) {
   const el = document.getElementById("admin-subview-" + tab);
   if (el) el.classList.add("active");
   if (btn) btn.classList.add("active");
+  if (tab === "dashboard") renderAdminDashboard();
   if (tab === "pedidos")   renderOrdersAdmin();
   if (tab === "tickets")   renderTickets();
   if (tab === "stats")     renderStats();
@@ -2298,13 +2776,15 @@ function applySession() {
     document.getElementById("session-label").textContent = currentSession.vendedorNombre;
     document.getElementById("header-menu-sub").textContent = currentSession.vendedorFolio;
     showVendedorUI();
-    switchTab("clientes");
+    switchTab("catalogo");
   }
   toast(`✅ Bienvenido, ${currentSession.role === "admin" ? "Administrador" : currentSession.vendedorNombre}`);
 }
 
 function showAdminUI() {
   // Admin ve clientes, admin, caja — NO catálogo, pedido ni historial
+  document.body.classList.add("role-admin");
+  document.body.classList.remove("role-vendedor");
   document.querySelectorAll(".tab-btn").forEach(b => b.style.display = "");
   document.querySelector("[data-tab='catalogo']").style.display  = "none";
   document.querySelector("[data-tab='pedido']").style.display    = "none";
@@ -2316,8 +2796,11 @@ function showAdminUI() {
 }
 
 function showVendedorUI() {
-  // Vendedor ve: clientes (seleccionar tienda), catálogo, pedido, historial/tickets — NO admin, caja
+  // Vendedor ve: catálogo, pedido, historial — NO clientes (ya no aplica), admin, caja
+  document.body.classList.add("role-vendedor");
+  document.body.classList.remove("role-admin");
   document.querySelectorAll(".tab-btn").forEach(b => b.style.display = "");
+  document.querySelector("[data-tab='clientes']").style.display = "none";
   document.querySelectorAll("[data-tab='admin']").forEach(b => b.style.display = "none");
   document.querySelector("[data-tab='caja']").style.display = "none";
   // Ocultar formulario de registro de tienda
@@ -2336,6 +2819,7 @@ function doLogout() {
   descuentos = {};
   activeCustomerId   = null;
   activeCustomerData = null;
+  document.body.classList.remove("role-admin", "role-vendedor");
   // Ocultar header y nav hasta próxima sesión
   document.getElementById("app-header").style.display = "none";
   document.getElementById("tab-bar").style.display = "none";
@@ -2354,7 +2838,7 @@ function doLogout() {
   setLoginRole("vendedor");
   // Restaurar todo visible para la próxima sesión
   document.querySelectorAll(".tab-btn").forEach(b => b.style.display = "");
-  switchTab("clientes");
+  switchTab("catalogo");
   document.getElementById("login-screen").classList.remove("hidden");
 }
 
@@ -2370,13 +2854,6 @@ let descuentos  = {};   // { productId: pct } — descuentos por línea en el pe
 let activeCustomerId   = null;
 let activeCustomerData = null;
 let activeCategory     = "";   // categoría seleccionada en catálogo
-
-// ── Configuración de horario de pedidos ─────────────────────────
-// horaCierre: "HH:MM" — después de esta hora no se aceptan pedidos
-// cerradoManual: true si el admin cerró manualmente antes de hora
-// cerradoManualFecha: "YYYY-MM-DD" del día en que se cerró manual
-//   (si cambia el día, el cierre manual deja de aplicar solo)
-let orderConfig = { horaCierre: "19:00", cerradoManual: false, cerradoManualFecha: "" };
 
 // ════════════════════════════════════════════════════════════════
 // INICIALIZACIÓN — esperar Firebase
@@ -2425,7 +2902,7 @@ function initApp() {
                         .sort((a,b) => (a.name||"").localeCompare(b.name||""));
     renderProducts();
     renderStockList();
-    if (currentSession?.role === "admin") renderBulkTable();
+    if (currentSession?.role === "admin") { renderBulkTable(); renderAdminDashboard(); }
   }, err => {
     console.error("products error:", err);
     if (err.code === "permission-denied") showFirebaseErrorBanner("🔒 Sin permiso en Firestore. Revisa las Reglas.");
@@ -2442,6 +2919,7 @@ function initApp() {
     renderOrdersAdmin();
     renderCaja();
     renderTickets();
+    if (currentSession?.role === "admin") renderAdminDashboard();
   }, err => {
     console.error("orders error:", err);
     if (err.code === "permission-denied") showFirebaseErrorBanner("🔒 Sin permiso en Firestore. Revisa las Reglas.");
@@ -2452,6 +2930,7 @@ function initApp() {
     gastos = snap.docs.map(d => ({ id: d.id, ...d.data() }))
                       .sort((a,b) => (b.fecha||"").localeCompare(a.fecha||""));
     renderCaja();
+    if (currentSession?.role === "admin") renderAdminDashboard();
   }, err => { console.error("gastos error:", err); });
 
   // ── Escucha en tiempo real: Vendedores ───────────────────────
@@ -2461,17 +2940,6 @@ function initApp() {
     renderVendedoresList();
     populateLoginVendedores();
   }, err => { console.warn("vendedores error:", err); });
-
-  // ── Escucha en tiempo real: Configuración de horario de pedidos ─
-  const { doc } = window._fsLib;
-  onSnapshot(doc(db, "config", "horario"), snap => {
-    if (snap && snap.exists) {
-      const data = typeof snap.data === "function" ? snap.data() : snap.data;
-      if (data) orderConfig = { ...orderConfig, ...data };
-    }
-    renderCart();
-    renderOrderScheduleAdmin();
-  }, err => { console.warn("config/horario error:", err); });
 
   // Mostrar login al inicio
   populateLoginVendedores();
@@ -2497,7 +2965,7 @@ function switchTab(tab, adminSub) {
   }
   if (tab === "historial") renderHistorial();
   if (tab === "admin" && !adminUnlocked && currentSession?.role !== "admin") {
-    pendingAdminSub = adminSub || "productos";
+    pendingAdminSub = adminSub || "dashboard";
     document.getElementById("pin-overlay").classList.add("open");
     document.getElementById("pin-input").value = "";
     return;
@@ -2512,8 +2980,11 @@ function switchTab(tab, adminSub) {
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   const viewEl = document.getElementById("view-" + tab);
   if (viewEl) viewEl.classList.add("active");
+  // Ocultar FAB cuando estás en pedido (ya tienes los botones ahí)
+  const fab = document.getElementById("cart-fab");
+  if (fab) fab.style.display = tab === "pedido" ? "none" : "";
   if (tab === "admin") {
-    const sub = adminSub || "productos";
+    const sub = adminSub || "dashboard";
     const subBtn = document.querySelector(`.admin-subtab-btn[data-sub="${sub}"]`) || document.querySelector(".admin-subtab-btn");
     switchAdminTab(sub, subBtn);
     const navBtn = document.querySelector(`.tab-btn[data-tab="admin"][data-admin-sub="${sub}"]`);
@@ -2950,22 +3421,8 @@ function renderCart() {
   const confirmBtn = document.getElementById("confirm-order-btn");
   const assignCard = document.getElementById("checkout-assign-card");
   const newBtnRow  = document.querySelector(".checkout-confirm-row");
-  const closedEl   = document.getElementById("cart-closed-banner");
 
   const entries = Object.entries(cart);
-
-  // ── Pedidos cerrados: ocultar botón de confirmar y avisar ──────
-  if (closedEl) {
-    if (pedidosCerrados()) {
-      closedEl.style.display = "block";
-      closedEl.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22" style="margin-bottom:.3rem;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        <div style="font-weight:700;">🔒 Pedidos cerrados por hoy</div>
-        <div style="font-size:.8rem;margin-top:.2rem;">Vuelve a abrir la app después de las ${horaAperturaStr()} para hacer tu pedido (entrará en la ruta de mañana).</div>`;
-    } else {
-      closedEl.style.display = "none";
-    }
-  }
 
   if (!entries.length) {
     summaryCard.style.display = "none";
@@ -2980,7 +3437,7 @@ function renderCart() {
   summaryCard.style.display = "";
   if (assignCard) assignCard.style.display = "";
   if (newBtnRow) newBtnRow.style.display = "flex";
-  confirmBtn.style.display  = pedidosCerrados() ? "none" : "";
+  confirmBtn.style.display  = "";
   emptyEl.style.display     = "none";
 
   linesEl.innerHTML = Object.entries(cart).map(([key, qty]) => {
@@ -3158,89 +3615,9 @@ function clearCart() {
   toast("🗑 Carrito limpiado");
 }
 
-// ════════════════════════════════════════════════════════════════
-// HORARIO DE PEDIDOS
-// Controla si las tiendas pueden o no confirmar pedidos:
-//  - Corte automático por hora (orderConfig.horaCierre, "HH:MM")
-//  - Corte manual de emergencia desde Admin (orderConfig.cerradoManual)
-//    que se auto-resetea al cambiar de día.
-// ════════════════════════════════════════════════════════════════
 function getHoyStr() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-}
-
-function pedidosCerrados() {
-  // Cierre manual solo aplica si fue marcado el mismo día de hoy
-  if (orderConfig.cerradoManual && orderConfig.cerradoManualFecha === getHoyStr()) {
-    return true;
-  }
-  // Cierre automático por hora: cerrado desde la hora de cierre
-  // hasta la medianoche; reabre automáticamente a las 00:00.
-  const horaCierre = orderConfig.horaCierre || "19:00";
-  const [hh, mm] = horaCierre.split(":").map(Number);
-  const now = new Date();
-  const minutosAhora   = now.getHours() * 60 + now.getMinutes();
-  const minutosCierre  = hh * 60 + (mm || 0);
-  return minutosAhora >= minutosCierre;
-}
-
-function horaAperturaStr() {
-  // La apertura del día siguiente se asume a las 00:00
-  return "00:00";
-}
-
-async function setCierreManual(cerrado) {
-  orderConfig.cerradoManual = cerrado;
-  orderConfig.cerradoManualFecha = cerrado ? getHoyStr() : "";
-  renderCart();
-  renderOrderScheduleAdmin();
-  try {
-    const { doc, setDoc } = window._fsLib;
-    if (window._db && window._firebaseReady) {
-      await setDoc(doc(window._db, "config", "horario"), orderConfig, { merge: true });
-    }
-  } catch(e) { console.warn("setCierreManual error:", e); }
-  toast(cerrado ? "🔒 Pedidos cerrados por hoy" : "🔓 Pedidos reabiertos");
-}
-
-async function setHoraCierre(hora) {
-  orderConfig.horaCierre = hora;
-  renderCart();
-  renderOrderScheduleAdmin();
-  try {
-    const { doc, setDoc } = window._fsLib;
-    if (window._db && window._firebaseReady) {
-      await setDoc(doc(window._db, "config", "horario"), orderConfig, { merge: true });
-    }
-  } catch(e) { console.warn("setHoraCierre error:", e); }
-  toast(`✅ Hora de cierre actualizada a las ${hora}`);
-}
-
-function renderOrderScheduleAdmin() {
-  const statusEl = document.getElementById("order-schedule-status");
-  const btnEl    = document.getElementById("order-schedule-toggle-btn");
-  const horaEl   = document.getElementById("order-schedule-hora");
-  if (!statusEl || !btnEl || !horaEl) return;
-
-  horaEl.value = orderConfig.horaCierre || "19:00";
-
-  const cerrado = pedidosCerrados();
-  const manualHoy = orderConfig.cerradoManual && orderConfig.cerradoManualFecha === getHoyStr();
-
-  if (cerrado) {
-    statusEl.innerHTML = manualHoy
-      ? `🔒 <strong>Pedidos cerrados manualmente</strong> — las tiendas no pueden comprar hasta que reabras o inicie el siguiente día.`
-      : `🔒 <strong>Pedidos cerrados</strong> — pasó la hora de corte (${orderConfig.horaCierre}). Se reabren automáticamente mañana.`;
-    statusEl.style.color = "#b91c1c";
-    btnEl.textContent = "🔓 Reabrir pedidos de hoy";
-    btnEl.onclick = () => setCierreManual(false);
-  } else {
-    statusEl.innerHTML = `🟢 <strong>Pedidos abiertos</strong> — las tiendas pueden comprar hasta las ${orderConfig.horaCierre}.`;
-    statusEl.style.color = "#15803d";
-    btnEl.textContent = "🔒 Cerrar pedidos de hoy ahora";
-    btnEl.onclick = () => setCierreManual(true);
-  }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -3250,7 +3627,6 @@ function renderOrderScheduleAdmin() {
 async function confirmOrder() {
   if (!activeCustomerId) { toast("⚠ Asigna una tienda de entrega (Paso 2)"); return; }
   if (!Object.keys(cart).length) { toast("⚠ El carrito está vacío"); return; }
-  if (pedidosCerrados()) { toast("🔒 Pedidos cerrados por hoy, intenta más tarde"); renderCart(); return; }
 
   const lines = Object.entries(cart).map(([key, qty]) => {
     const isCaja    = key.endsWith("_caja");
@@ -3283,7 +3659,10 @@ async function confirmOrder() {
     address:      activeCustomerData.address || "",
     lines, total,
     totalDescuento: totalDescuento > 0 ? totalDescuento : 0,
-    status:"Pendiente",
+    // El pedido se registra ya entregado y cobrado: el vendedor lleva
+    // el producto y cobra en el momento, no hay ruta ni confirmación
+    // posterior de entrega.
+    status:"Entregado",
     // Datos del vendedor
     vendedorId:    currentSession?.vendedorId    || null,
     vendedorFolio: currentSession?.vendedorFolio || null,
@@ -3348,7 +3727,7 @@ function buildWhatsAppText(lines, total) {
     txt += `${l.emoji} ${l.name} × ${l.qty} = $${l.subtotal.toFixed(2)}\n`;
   });
   txt += `\n💰 *TOTAL: $${total.toFixed(2)}*\n`;
-  txt += `\nEstado: PENDIENTE DE ENTREGA`;
+  txt += `\n✅ Entregado y cobrado`;
   return txt;
 }
 
@@ -3364,7 +3743,7 @@ function showOrderConfirmedModal(waText, phone) {
       <div class="modal-handle"></div>
       <div class="modal-title">✅ Pedido Confirmado</div>
       <p style="font-size:.85rem;color:var(--gray-600);margin-bottom:1rem;">
-        El pedido fue guardado con estado <strong>Pendiente</strong>.<br/>
+        El pedido fue guardado como <strong>entregado y cobrado</strong>.<br/>
         Toca el botón para enviarme el resumen por WhatsApp.
       </p>
       <pre style="background:var(--gray-50);border-radius:8px;padding:.75rem;font-size:.72rem;
@@ -3394,7 +3773,56 @@ function sendWhatsApp() {
 // ════════════════════════════════════════════════════════════════
 // ADMIN — STOCK LIST
 // ════════════════════════════════════════════════════════════════
+function renderInventarioKPIs() {
+  const el = document.getElementById("inventario-kpis");
+  if (!el) return;
+
+  const total = products.length;
+  const conStock = products.filter(p => (p.stock ?? 0) > 0).length;
+  const pctDisponible = total > 0 ? (conStock / total * 100) : 0;
+
+  const critico = products.filter(p => (p.stock ?? 0) < 15).length;
+  const pendientes = products.filter(p => p.pesado).length;
+
+  const valorInventario = products.reduce((s,p) => s + ((p.stock||0) * (+p.precioCosto||0)), 0);
+
+  el.innerHTML = `
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">SKUs<br>Activos</span>
+        <div class="dash-kpi-icon-box green">📦</div>
+      </div>
+      <div class="dash-kpi-value">${total}</div>
+      <div class="dash-kpi-badge up">${pctDisponible.toFixed(1)}% disponibilidad</div>
+    </div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Stock Crítico<br>/ Cero</span>
+        <div class="dash-kpi-icon-box red">🛒</div>
+      </div>
+      <div class="dash-kpi-value">${critico}</div>
+      <div class="dash-kpi-badge" style="background:#FEE2E2;color:#B91C1C;">${critico ? "Requiere reorden" : "Todo en orden"}</div>
+    </div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Pendientes<br>Verificación</span>
+        <div class="dash-kpi-icon-box amber">⚠</div>
+      </div>
+      <div class="dash-kpi-value">${pendientes}</div>
+      <div class="dash-kpi-badge" style="background:#FEF3C7;color:#92400E;">Producto pesado</div>
+    </div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Valor del<br>Inventario</span>
+        <div class="dash-kpi-icon-box purple">💰</div>
+      </div>
+      <div class="dash-kpi-value">$${valorInventario.toFixed(2)}</div>
+      <div class="dash-kpi-badge gray">a costo de compra</div>
+    </div>`;
+}
+
 function renderStockList() {
+  renderInventarioKPIs();
   const el = document.getElementById("stock-list");
   if (!products.length) {
     el.innerHTML = `<div class="empty-state"><p>Sin productos aún.</p></div>`;
@@ -3406,20 +3834,44 @@ function renderStockList() {
     const isOut = (p.stock ?? 0) === 0;
     const unitStr  = p.unit ? esc(p.unit) : "";
     const cajasStr = parseInt(p.piezas) > 0 ? `📦 ${p.piezas} pzas/caja` : "";
-    const extraStr = [unitStr, cajasStr].filter(Boolean).join(" &nbsp;·&nbsp; ");
+    const extraStr = [unitStr, cajasStr].filter(Boolean).join(" · ");
+
+    const estatus = isOut
+      ? { txt: "Sin Stock", bg: "#F3F4F6", fg: "#6B7280" }
+      : isLow
+      ? { txt: "Stock Bajo", bg: "#FEF3C7", fg: "#92400E" }
+      : { txt: "En Stock",  bg: "#DCFCE7", fg: "#15803D" };
+
+    const barColor = isOut ? "#DC2626" : isLow ? "#D97706" : "#16A34A";
+    const barPct = Math.max(4, Math.min(100, ((p.stock ?? 0) / 30) * 100));
+    const gananciaPct = p.precioCosto ? (((+p.price)-(+p.precioCosto))/(+p.price)*100).toFixed(1) : null;
+
     return `
-    <div class="stock-item">
-      <span class="stock-emoji">${p.emoji || "📦"}</span>
-      <div class="stock-info">
-        <div class="stock-name">${esc(p.name)}${isLow ? `<span class="stock-low-badge">⚠ Bajo</span>` : ""}${isOut ? `<span class="stock-low-badge" style="background:#f3f4f6;color:#9e9e9e;border-color:#ccc;">Sin stock</span>` : ""}${p.pesado ? `<span class="stock-low-badge" style="background:#fde68a;color:#92400e;border-color:#f59e0b;">⚠ Pendiente</span>` : ""}</div>
-        <div class="stock-current">
-          Stock: <strong style="${isLow||isOut ? "color:var(--amber)" : ""}">${p.stock ?? 0}</strong>
-          &nbsp;|&nbsp; Venta: <strong style="color:var(--red-700)">$${(+p.price).toFixed(2)}</strong>
-          ${p.precioCosto ? `&nbsp;|&nbsp; Costo: $${(+p.precioCosto).toFixed(2)} &nbsp;|&nbsp; <span style="color:var(--green);font-weight:700;">+$${((+p.price)-(+p.precioCosto)).toFixed(2)} gan.</span>` : ""}
-          ${extraStr ? `&nbsp;|&nbsp;<span style="color:var(--red-700);font-weight:600;">${extraStr}</span>` : ""}
+    <div class="stock-card">
+      <div class="stock-card-top">
+        <span class="stock-card-emoji">${p.emoji || "📦"}</span>
+        <div class="stock-card-title">
+          <div class="stock-card-name">${esc(p.name)}${p.pesado ? ` <span class="stock-low-badge" style="background:#fde68a;color:#92400e;border-color:#f59e0b;">⚠ Pendiente</span>` : ""}</div>
+          ${extraStr ? `<div class="stock-card-meta">${extraStr}</div>` : ""}
+        </div>
+        <span class="stock-estatus-pill" style="background:${estatus.bg};color:${estatus.fg};">${estatus.txt}</span>
+      </div>
+      <div class="stock-card-grid">
+        <div>
+          <div class="stock-field-label">Stock actual</div>
+          <div class="stock-field-value" style="${isLow||isOut ? "color:"+barColor : ""}">${p.stock ?? 0}</div>
+          <div class="stock-level-track"><div class="stock-level-fill" style="width:${barPct}%;background:${barColor}"></div></div>
+        </div>
+        <div>
+          <div class="stock-field-label">Precios &amp; margen</div>
+          <div class="stock-price-lines">
+            Costo: <b>$${p.precioCosto ? (+p.precioCosto).toFixed(2) : "—"}</b><br/>
+            Venta: <b>$${(+p.price).toFixed(2)}</b><br/>
+            ${gananciaPct !== null ? `<b>+$${((+p.price)-(+p.precioCosto)).toFixed(2)} gan. (${gananciaPct}%)</b>` : ""}
+          </div>
         </div>
       </div>
-      <div class="stock-input-wrap">
+      <div class="stock-card-actions">
         <input type="number" id="stock-edit-${p.id}" value="${p.stock ?? 0}" min="0"
                style="width:62px;text-align:center;font-weight:700;padding:.45rem .3rem;font-size:.9rem;" />
         <button class="stock-save-btn" onclick="saveStock('${p.id}')">💾</button>
@@ -4048,33 +4500,41 @@ function renderOrdersAdmin() {
   }
 
   el.innerHTML = orders.map(o => {
-    const statusClass = o.status === "Entregado" ? "badge-done"
-                      : o.status === "En ruta"   ? "badge-route"
-                      : "badge-pending";
-    const dateStr = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleString("es-MX") : "—";
+    const dateStr = o.createdAt?.toDate
+      ? o.createdAt.toDate().toLocaleString("es-MX", {day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})
+      : "—";
+    const linesTxt = (o.lines || []).map(l => `${l.emoji||"📦"} ${esc(l.name)} ×${l.qty}`).join(" · ");
     return `
     <div class="order-admin-card">
       <div class="order-admin-head">
-        <div>
-          <div style="font-weight:700;font-size:.92rem;">${esc(o.customerName)}</div>
-          <div class="order-meta">📅 ${dateStr} · 💰 $${(+o.total).toFixed(2)}</div>
+        <div style="min-width:0;">
+          <div style="font-weight:800;font-size:.95rem;color:var(--gray-900);">${esc(o.customerName)}</div>
+          <div class="order-meta" style="margin-top:.15rem;">
+            📅 ${dateStr}
+            ${o.vendedorFolio ? ` · <span style="color:#2563EB;font-weight:700;">${esc(o.vendedorFolio)}</span>` : ""}
+          </div>
         </div>
-        <span class="badge ${statusClass}">${o.status}</span>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:1rem;font-weight:900;color:var(--red-700);">$${(+o.total).toFixed(2)}</div>
+          <div style="font-size:.68rem;color:var(--gray-400);">${(o.lines||[]).reduce((s,l)=>s+(l.qty||0),0)} unidades</div>
+        </div>
       </div>
       <div class="order-admin-body">
-        <div style="font-size:.78rem;color:var(--gray-600);margin-bottom:.4rem;">
-          ${(o.lines || []).map(l => `${l.emoji} ${esc(l.name)} ×${l.qty}`).join(" &nbsp;·&nbsp; ")}
+        <div style="font-size:.78rem;color:var(--gray-600);line-height:1.6;margin-bottom:.5rem;">
+          ${linesTxt}
         </div>
-        <div style="font-size:.75rem;color:var(--gray-400);">📍 ${esc(o.address || "Sin dirección")}</div>
-        ${o.vendedorFolio ? `<div style="font-size:.72rem;color:#2563EB;margin-top:.2rem;">🧑‍💼 ${esc(o.vendedorFolio)} — ${esc(o.vendedorNombre||"")}</div>` : ""}
-        <div class="order-admin-actions">
-          <button class="btn btn-sm btn-ghost" onclick="setOrderStatus('${o.id}','En ruta')">🚚 En ruta</button>
-          <button class="btn btn-sm btn-success" onclick="setOrderStatus('${o.id}','Entregado')">✔ Entregado</button>
-          <button class="btn btn-sm" style="background:#EEF4FF;color:#2563EB;"
-                  onclick="openEditOrder('${o.id}')">✏️ Editar</button>
-          <button class="btn btn-sm" style="background:var(--red-100);color:var(--red-700);"
-                  onclick="deleteOrder('${o.id}')">🗑</button>
-        </div>
+        ${o.address ? `<div style="font-size:.72rem;color:var(--gray-400);">📍 ${esc(o.address)}</div>` : ""}
+      </div>
+      <div class="order-admin-actions" style="justify-content:flex-end;">
+        <button class="btn btn-sm" style="background:#EEF4FF;color:#2563EB;gap:.3rem;"
+                onclick="openEditOrder('${o.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editar
+        </button>
+        <button class="btn btn-sm" style="background:var(--red-100);color:var(--red-700);"
+                onclick="deleteOrder('${o.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+        </button>
       </div>
     </div>`;
   }).join("");
@@ -4113,20 +4573,16 @@ function renderTickets() {
   el.innerHTML = filtered.map(o => buildTicketCard(o)).join("");
 }
 
-// ── Resumen de productos "pendientes" (pesados/grandes) ────────
+// ── Resumen de productos "pesados" (para cargar/entregar) ──────
 // Suma las cantidades de los productos marcados como `pesado`
-// a través de los pedidos visibles, para que el almacén
-// sepa de un vistazo cuánto juntar para el repartidor.
-// IMPORTANTE: los pedidos ya "Entregado" NUNCA se incluyen aquí,
-// sin importar el filtro de estado seleccionado — un pedido
-// entregado ya no debe sumar al "por juntar".
+// a través de los pedidos visibles, para que el vendedor sepa
+// de un vistazo cuánto tiene que cargar de esos productos hoy.
 function getPendientesSummary(filteredOrders) {
   const pesadoIds = new Set(products.filter(p => p.pesado).map(p => p.id));
   if (!pesadoIds.size) return [];
 
   const totals = {}; // productId -> { name, emoji, unit, piezas, qty }
   filteredOrders.forEach(o => {
-    if (o.status === "Entregado") return;
     (o.lines||[]).forEach(l => {
       if (!pesadoIds.has(l.productId)) return;
       if (!totals[l.productId]) {
@@ -4186,7 +4642,7 @@ function printPendientesSummary() {
 
 function buildTicketCard(o) {
   const dateStr = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleString("es-MX") : "—";
-  const sc = o.status==="Entregado"?"status-entregado":o.status==="En ruta"?"status-ruta":"";
+  const sc = "status-entregado";
   const rows = (o.lines||[]).map(l =>
     `<tr><td>${l.emoji||"📦"} ${esc(l.name)}</td>
          <td style="text-align:center;padding:0 .5rem;">${l.qty}</td>
@@ -4197,7 +4653,7 @@ function buildTicketCard(o) {
       <div>
         <div class="ticket-store">${esc(o.customerName)}</div>
         <div class="ticket-meta">📅 ${dateStr}${o.address?` · 📍 ${esc(o.address)}`:""}</div>
-        <div class="ticket-meta">Estado: <strong>${o.status||"Pendiente"}</strong> · #${(o.id||"").slice(-6).toUpperCase()}${o.vendedorFolio ? ` · 🧑‍💼 ${esc(o.vendedorFolio)}` : ""}</div>
+        <div class="ticket-meta">Estado: <strong>${o.status||"Entregado"}</strong> · #${(o.id||"").slice(-6).toUpperCase()}${o.vendedorFolio ? ` · 🧑‍💼 ${esc(o.vendedorFolio)}` : ""}</div>
       </div>
       <button class="ticket-print-btn" onclick="printOneTicket('${o.id}')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
@@ -4259,7 +4715,7 @@ function buildTicketPrint(o) {
       <div class="th-footer">
         Folio: #${(o.id||"").slice(-6).toUpperCase()}<br/>
         ${o.vendedorFolio ? `Vendedor: ${esc(o.vendedorFolio)}<br/>` : ""}
-        Estado: ${o.status||"Pendiente"}<br/>
+        Estado: ${o.status||"Entregado"}<br/>
         ¡Gracias por su compra!
       </div>
       <div class="th-cut">- - - - - - - - - -</div>
@@ -4303,7 +4759,7 @@ function buildTicketPrint(o) {
       ${showCost && gananciaTotal > 0 ? `<div style="display:flex;justify-content:space-between;font-size:.75rem;color:#555;margin-top:.3rem;"><span>Ganancia bruta:</span><span style="color:#1B8C52;font-weight:700;">$${gananciaTotal.toFixed(2)}</span></div>` : ""}
     </div>
     <div style="background:#f9f9f9;padding:.45rem 1rem;font-size:.72rem;color:#888;display:flex;justify-content:space-between;">
-      <span>#${(o.id||"").slice(-6).toUpperCase()}</span><span>Estado: ${o.status||"Pendiente"}</span>
+      <span>#${(o.id||"").slice(-6).toUpperCase()}</span><span>Estado: ${o.status||"Entregado"}</span>
     </div>
   </div>`;
 }
@@ -4317,8 +4773,8 @@ function buildPendientesPrint(summary) {
   return `
   <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto 2.5rem;border:2px solid #222;border-radius:8px;overflow:hidden;page-break-inside:avoid;">
     <div style="background:#f59e0b;color:#fff;padding:.7rem 1rem;">
-      <div style="font-size:1.1rem;font-weight:800;">⚠ Resumen de Pendientes</div>
-      <div style="font-size:.75rem;opacity:.9;margin-top:2px;">Productos a juntar para el repartidor</div>
+      <div style="font-size:1.1rem;font-weight:800;">⚠ Resumen de Productos Pesados</div>
+      <div style="font-size:.75rem;opacity:.9;margin-top:2px;">Productos pesados a cargar hoy</div>
     </div>
     <div style="padding:.8rem 1rem;">
       <table style="width:100%;border-collapse:collapse;font-size:.9rem;">
@@ -4408,6 +4864,147 @@ function renderStockAlert() {
   list.innerHTML = lowStock.map(p =>
     `• ${p.emoji || "📦"} <strong>${esc(p.name)}</strong> — quedan <strong style="color:var(--amber)">${p.stock ?? 0}</strong> unidades`
   ).join("<br/>");
+}
+
+// ════════════════════════════════════════════════════════════════
+// DASHBOARD ADMIN (Panel Central)
+// Usa las mismas fórmulas que el módulo de Caja (ventas, ganancia
+// bruta, utilidad neta) pero acotadas al día de hoy.
+// ════════════════════════════════════════════════════════════════
+function renderAdminDashboard() {
+  const hoyStr = getHoyStr();
+
+  const ordersHoy = orders.filter(o => {
+    let d = "";
+    if (o.createdAt?.toDate) {
+      const dt = o.createdAt.toDate();
+      d = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+    } else {
+      d = o.fechaStr || "";
+    }
+    return d === hoyStr;
+  });
+
+  // Todo pedido registrado ya está entregado y cobrado, no hay etapas.
+  const entregados = ordersHoy;
+
+  const ventasCobradas = entregados.reduce((s,o) => s + (+o.total || 0), 0);
+
+  let totalCostoVendido = 0;
+  entregados.forEach(o => {
+    (o.lines || []).forEach(l => {
+      const prod = products.find(p => p.id === l.productId);
+      const costo = prod?.precioCosto ? (+prod.precioCosto) : 0;
+      totalCostoVendido += costo * (l.qty || 0);
+    });
+  });
+  const gananciaBruta = ventasCobradas - totalCostoVendido;
+  const margen = ventasCobradas > 0 ? (gananciaBruta / ventasCobradas * 100) : 0;
+
+  const gastosHoy = gastos.filter(g => g.fecha === hoyStr);
+  const totalGastosHoy = gastosHoy.reduce((s,g) => s + (+g.monto || 0), 0);
+  const utilidadNeta = gananciaBruta - totalGastosHoy;
+
+  // ── Fecha ─────────────────────────────────────────────────────
+  const fechaEl = document.getElementById("dash-fecha-label");
+  if (fechaEl) {
+    const hoyDate = new Date();
+    fechaEl.textContent = `Hoy, ${hoyDate.toLocaleDateString("es-MX",{day:"numeric",month:"long"})}`;
+  }
+
+  // ── KPIs ─────────────────────────────────────────────────────
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+  // Formato compacto de moneda
+  const fmt = n => n >= 1000 ? `$${(n/1000).toFixed(1)}K` : `$${n.toFixed(0)}`;
+
+  set("dash-kpi-ventas",   fmt(ventasCobradas));
+  const ventasBadge = document.getElementById("dash-kpi-ventas-badge");
+  if (ventasBadge) ventasBadge.textContent = `↑ ${entregados.length} pedido${entregados.length!==1?"s":""} entregado${entregados.length!==1?"s":""}`;
+
+  set("dash-kpi-ganancia", fmt(gananciaBruta));
+  const margenBadge = document.getElementById("dash-kpi-margen-badge");
+  if (margenBadge) margenBadge.textContent = `Margen ${margen.toFixed(0)}%`;
+
+  set("dash-kpi-utilidad", `$${utilidadNeta.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2})}`);
+
+  // Badge estado utilidad
+  const uBadge = document.getElementById("dash-utilidad-badge");
+  if (uBadge) {
+    if (utilidadNeta > 0) { uBadge.textContent = "Óptimo"; uBadge.style.background="#DCFCE7"; uBadge.style.color="#15803D"; }
+    else { uBadge.textContent = "En rojo"; uBadge.style.background="#FEE2E2"; uBadge.style.color="#B91C1C"; }
+  }
+  // Fletes / gastos label
+  const fletesEl = document.getElementById("dash-fletes-label");
+  if (fletesEl && totalGastosHoy > 0) fletesEl.textContent = `−$${totalGastosHoy.toFixed(0)} gastos`;
+  else if (fletesEl) fletesEl.textContent = "";
+
+  // Barra de utilidad (% del margen)
+  const barEl = document.getElementById("dash-utilidad-bar");
+  if (barEl) barEl.style.width = Math.min(100, Math.max(0, margen)) + "%";
+
+  // Pedidos
+  set("dash-kpi-pedidos",       ordersHoy.length);
+
+  // ── Inventario crítico ──────────────────────────────────────
+  const critList  = document.getElementById("dash-critical-list");
+  const critCount = document.getElementById("dash-critical-count");
+  const lowStock  = products.filter(p => (p.stock ?? 0) < 15).sort((a,b) => (a.stock??0) - (b.stock??0));
+
+  if (critCount) critCount.textContent = `${lowStock.length} Urgente${lowStock.length!==1?"s":""}`;
+  if (critList) {
+    if (!lowStock.length) {
+      critList.innerHTML = `<div class="empty-state" style="padding:1rem 0;"><p>Sin productos en nivel crítico. 🎉</p></div>`;
+    } else {
+      critList.innerHTML = lowStock.map(p => {
+        const isCrit   = (p.stock ?? 0) < 5;
+        const minSug   = 15;
+        const stockCls = isCrit ? "crit" : "low";
+        return `<div class="dash-critical-item">
+          <div class="dash-critical-emoji">${p.emoji||"📦"}</div>
+          <div class="dash-critical-info">
+            <div class="dash-critical-name">${esc(p.name)}</div>
+            <div class="dash-critical-min">Mínimo requerido: ${minSug} ${esc(p.unit||"pzas")}</div>
+            <div class="dash-critical-stock ${stockCls}">
+              <span class="dash-critical-stock-dot"></span>
+              Solo ${p.stock??0} ${esc(p.unit||"pzas")}
+            </div>
+          </div>
+          <button class="dash-pedir-btn" onclick="toast('📋 Orden de compra — próximamente')">Pedir OC</button>
+        </div>`;
+      }).join("");
+    }
+  }
+
+  // ── Tabla de pedidos de hoy ───────────────────────────────
+  const tbody = document.getElementById("dash-orders-tbody");
+  if (tbody) {
+    if (!ordersHoy.length) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--gray-400);padding:1.2rem 0;">Sin pedidos hoy.</td></tr>`;
+    } else {
+      const sorted = [...ordersHoy].sort((a,b) => {
+        const da = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
+        const db_ = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+        return db_ - da;
+      });
+      tbody.innerHTML = sorted.map(o => {
+        const hora = o.createdAt?.toDate
+          ? o.createdAt.toDate().toLocaleTimeString("es-MX", {hour:"2-digit", minute:"2-digit"})
+          : "—";
+        return `<tr>
+          <td>
+            <div class="order-folio">#${(o.id||"").slice(-6).toUpperCase()}</div>
+            <div class="order-hora">${hora}</div>
+          </td>
+          <td>${esc(o.customerName||"—")}</td>
+          <td>${esc(o.vendedorFolio||"—")}</td>
+          <td class="order-amt">$${(+o.total||0).toFixed(2)}</td>
+          <td><span class="badge badge-done">${o.status||"Entregado"}</span></td>
+          <td><button class="dash-order-print-btn" onclick="printOneTicket('${o.id}')">🖨 Ticket</button></td>
+        </tr>`;
+      }).join("");
+    }
+  }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -4612,12 +5209,36 @@ async function saveEditOrder() {
   // Recalcular total
   const newTotal = _editLines.reduce((s, l) => s + (+l.subtotal || 0), 0);
 
-  // Actualizar array local
   const o = orders.find(x => x.id === _editOrderId);
+  const oldLines = o ? (o.lines || []) : [];
+
+  // ── Reconciliar stock: comparar cantidades viejas vs. nuevas por producto ──
+  // Si bajó la cantidad (o se quitó el producto), se regresa la diferencia al stock.
+  // Si subió (o es un producto nuevo en el pedido), se descuenta la diferencia extra.
+  const oldQty = {};
+  oldLines.forEach(l => { oldQty[l.productId] = (oldQty[l.productId] || 0) + (l.qty || 0); });
+  const newQty = {};
+  _editLines.forEach(l => { newQty[l.productId] = (newQty[l.productId] || 0) + (l.qty || 0); });
+
+  const allProductIds = new Set([...Object.keys(oldQty), ...Object.keys(newQty)]);
+  const stockDeltas = []; // { productId, newStock }
+  allProductIds.forEach(pid => {
+    const diff = (oldQty[pid] || 0) - (newQty[pid] || 0); // positivo = regresar al stock
+    if (!diff) return;
+    const p = products.find(pr => pr.id === pid);
+    if (p) {
+      p.stock = Math.max(0, (p.stock || 0) + diff);
+      stockDeltas.push({ productId: pid, newStock: p.stock });
+    }
+  });
+
+  // Actualizar array local
   if (o) {
     o.lines = _editLines;
     o.total = newTotal;
   }
+
+  renderStockList();
 
   // Persistir en Firebase si está conectado
   try {
@@ -4626,32 +5247,51 @@ async function saveEditOrder() {
       await updateDoc(doc(window._db, "orders", _editOrderId), {
         lines: _editLines, total: newTotal
       });
+      stockDeltas.forEach(({ productId, newStock }) => {
+        updateDoc(doc(window._db, "products", productId), { stock: newStock }).catch(()=>{});
+      });
     }
   } catch(e) { console.warn("saveEditOrder Firebase error:", e); }
 
   document.getElementById("edit-order-overlay")?.remove();
   renderOrdersAdmin();
   renderCaja();
-  toast("✅ Pedido actualizado");
+  toast("✅ Pedido actualizado — stock ajustado");
 }
 
 
 async function deleteOrder(orderId) {
   confirmModal({
     title: "¿Eliminar pedido?",
-    msg: "Se borrará el pedido permanentemente.",
+    msg: "Se borrará el pedido permanentemente y se regresará el stock de sus productos.",
     confirmLabel: "Sí, eliminar",
     onConfirm: async () => {
-      orders = orders.filter(o => o.id !== orderId);
+      const o = orders.find(x => x.id === orderId);
+      const linesToRestore = o ? (o.lines || []) : [];
+
+      orders = orders.filter(x => x.id !== orderId);
       renderOrdersAdmin();
       renderCaja();
+
+      // Regresar stock local de cada línea del pedido eliminado
+      linesToRestore.forEach(l => {
+        const p = products.find(pr => pr.id === l.productId);
+        if (p) p.stock = (p.stock || 0) + (l.qty || 0);
+      });
+      renderStockList();
+
       try {
         if (window._db && window._firebaseReady) {
-          const { doc, deleteDoc } = window._fsLib;
+          const { doc, deleteDoc, updateDoc } = window._fsLib;
           await deleteDoc(doc(window._db, "orders", orderId));
+          // Persistir el stock devuelto en Firebase
+          linesToRestore.forEach(l => {
+            const p = products.find(pr => pr.id === l.productId);
+            if (p) updateDoc(doc(window._db, "products", l.productId), { stock: p.stock }).catch(()=>{});
+          });
         }
       } catch(e) { console.warn("deleteOrder Firebase error:", e); }
-      toast("🗑 Pedido eliminado");
+      toast("🗑 Pedido eliminado — stock devuelto");
     }
   });
 }
@@ -4659,15 +5299,6 @@ async function deleteOrder(orderId) {
 // ════════════════════════════════════════════════════════════════
 // HISTORIAL DE PEDIDOS (vista tienda)
 // ════════════════════════════════════════════════════════════════
-let historialFilter = "todos";
-
-function setHistorialFilter(f, btn) {
-  historialFilter = f;
-  document.querySelectorAll("#view-historial .caja-tab").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  renderHistorial();
-}
-
 function renderHistorial() {
   const el = document.getElementById("historial-list");
   if (!el) return;
@@ -4693,12 +5324,8 @@ function renderHistorial() {
     return;
   }
 
-  if (historialFilter !== "todos") {
-    myOrders = myOrders.filter(o => o.status === historialFilter);
-  }
-
   if (!myOrders.length) {
-    el.innerHTML = `<div class="empty-state"><p>Sin pedidos hoy para este filtro.</p></div>`;
+    el.innerHTML = `<div class="empty-state"><p>Sin pedidos hoy.</p></div>`;
     return;
   }
 
@@ -4708,10 +5335,6 @@ function renderHistorial() {
       📦 ${myOrders.length} pedido${myOrders.length>1?"s":""} de hoy · Total ruta: $${totalRuta.toFixed(2)}
     </div>` +
   myOrders.map(o => {
-    const statusClass = (o.status || "Pendiente").replace(" ", "-");
-    const statusColor = o.status === "Entregado" ? "var(--green)"
-                      : o.status === "En ruta"   ? "#2563EB"
-                      : "var(--amber)";
     const dt = o.createdAt?.toDate ? o.createdAt.toDate() : null;
     const dateStr = dt
       ? `${dt.toLocaleDateString("es-MX")} ${dt.toLocaleTimeString("es-MX", {hour:"2-digit",minute:"2-digit"})}`
@@ -4721,15 +5344,12 @@ function renderHistorial() {
       return `${l.emoji||"📦"} ${esc(l.name)} ×${l.qty}${descStr} — $${(+l.subtotal||0).toFixed(2)}`;
     }).join("<br/>");
 
-    return `<div class="historial-card status-${statusClass}">
+    return `<div class="historial-card">
       <div class="historial-head">
         <div>
           <div style="font-weight:700;font-size:.9rem;">🏪 ${esc(o.customerName)}</div>
           <div class="historial-date">📅 ${dateStr} · #${(o.id||"").slice(-6).toUpperCase()}</div>
         </div>
-        <span class="badge" style="background:${statusColor}22;color:${statusColor};border:1px solid ${statusColor}44;">
-          ${o.status || "Pendiente"}
-        </span>
       </div>
       <div class="historial-body">
         <div class="historial-lines">${lines}</div>
@@ -4806,6 +5426,7 @@ function initGastos() {
     gastos = snap.docs.map(d => ({ id: d.id, ...d.data() }))
                       .sort((a,b) => (b.fecha||"").localeCompare(a.fecha||""));
     renderCaja();
+    if (currentSession?.role === "admin") renderAdminDashboard();
   });
 }
 
@@ -4857,16 +5478,12 @@ function renderCaja() {
     return inRange(d, from, to);
   });
 
+  // Todo pedido registrado ya está entregado y cobrado, no hay "pendiente por cobrar".
   const ventasEntregadas = ordersInRange
-    .filter(o => o.status === "Entregado")
-    .reduce((s, o) => s + (+o.total || 0), 0);
-
-  const pendienteCobrar = ordersInRange
-    .filter(o => o.status !== "Entregado")
     .reduce((s, o) => s + (+o.total || 0), 0);
 
   const numPedidos = ordersInRange.length;
-  const numEntregados = ordersInRange.filter(o => o.status === "Entregado").length;
+  const numEntregados = numPedidos;
 
   // ── Filtrar gastos del período ───────────────────────────────
   const gastosInRange = gastos.filter(g => inRange(g.fecha, from, to));
@@ -4875,7 +5492,7 @@ function renderCaja() {
 
   // ── Ganancia bruta: ventas − costo de los productos ──────────
   let totalCostoVendido = 0;
-  ordersInRange.filter(o => o.status === "Entregado").forEach(o => {
+  ordersInRange.forEach(o => {
     (o.lines || []).forEach(l => {
       const prod = products.find(p => p.id === l.productId);
       const costo = prod?.precioCosto ? (+prod.precioCosto) : 0;
@@ -4886,34 +5503,42 @@ function renderCaja() {
   const utilidadNeta  = gananciaBruta - totalGastos;
 
   // ── KPIs ─────────────────────────────────────────────────────
+  const margenBruto = ventasEntregadas > 0 ? (gananciaBruta / ventasEntregadas * 100) : 0;
   const kpiEl = document.getElementById("caja-kpis");
   kpiEl.innerHTML = `
-    <div class="kpi-card green">
-      <div class="kpi-label">Ventas cobradas</div>
-      <div class="kpi-value">$${ventasEntregadas.toFixed(2)}</div>
-      <div class="kpi-sub">${numEntregados} pedidos entregados</div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Ventas<br>Cobradas</span>
+        <div class="dash-kpi-icon-box green">💳</div>
+      </div>
+      <div class="dash-kpi-value">$${ventasEntregadas.toFixed(2)}</div>
+      <div class="dash-kpi-badge up">↑ ${numEntregados} pedido${numEntregados!==1?"s":""} entregado${numEntregados!==1?"s":""}</div>
     </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Total gastos</div>
-      <div class="kpi-value" style="color:var(--red-700)">$${totalGastos.toFixed(2)}</div>
-      <div class="kpi-sub">${gastosInRange.length} egresos</div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Total<br>Gastos</span>
+        <div class="dash-kpi-icon-box red">🧾</div>
+      </div>
+      <div class="dash-kpi-value">$${totalGastos.toFixed(2)}</div>
+      <div class="dash-kpi-badge gray">${gastosInRange.length} egreso${gastosInRange.length!==1?"s":""}</div>
     </div>
-    <div class="kpi-card purple">
-      <div class="kpi-label">Ganancia bruta</div>
-      <div class="kpi-value" style="color:#7C3AED">$${gananciaBruta.toFixed(2)}</div>
-      <div class="kpi-sub">venta − costo producto</div>
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Ganancia<br>Bruta</span>
+        <div class="dash-kpi-icon-box purple">📈</div>
+      </div>
+      <div class="dash-kpi-value">$${gananciaBruta.toFixed(2)}</div>
+      <div class="dash-kpi-badge gray">Margen ${margenBruto.toFixed(0)}%</div>
     </div>
-    <div class="kpi-card ${utilidadNeta >= 0 ? "blue" : ""}" style="${utilidadNeta < 0 ? "border-top-color:var(--red-600)" : ""}">
-      <div class="kpi-label">Utilidad neta real</div>
-      <div class="kpi-value" style="color:${utilidadNeta >= 0 ? "#2563EB" : "var(--red-700)"}">
+    <div class="dash-kpi-card">
+      <div class="dash-kpi-top">
+        <span class="dash-kpi-label">Utilidad<br>Neta</span>
+        <div class="dash-kpi-icon-box ${utilidadNeta >= 0 ? "blue" : "red"}">🏦</div>
+      </div>
+      <div class="dash-kpi-value">
         ${utilidadNeta >= 0 ? "" : "−"}$${Math.abs(utilidadNeta).toFixed(2)}
       </div>
-      <div class="kpi-sub">bruta − gastos</div>
-    </div>
-    <div class="kpi-card amber">
-      <div class="kpi-label">Pendiente cobrar</div>
-      <div class="kpi-value" style="color:var(--amber)">$${pendienteCobrar.toFixed(2)}</div>
-      <div class="kpi-sub">${numPedidos - numEntregados} pedidos activos</div>
+      <div class="dash-kpi-badge ${utilidadNeta >= 0 ? "up" : ""}" style="${utilidadNeta < 0 ? "background:#FEE2E2;color:#B91C1C;" : ""}">${utilidadNeta >= 0 ? "Óptimo" : "En rojo"}</div>
     </div>`;
 
   // ── Resumen detallado ─────────────────────────────────────────
@@ -4923,50 +5548,53 @@ function renderCaja() {
     porCat[g.categoria] = (porCat[g.categoria] || 0) + (+g.monto || 0);
   });
 
-  const labelPeriod = cajaPeriod === "hoy" ? "hoy"
-    : cajaPeriod === "semana" ? "esta semana"
-    : cajaPeriod === "mes" ? "este mes"
-    : `${from} → ${to}`;
-
   const resumenEl = document.getElementById("caja-resumen");
-  let rows = `
-    <div class="resumen-row"><span class="resumen-label">📦 Pedidos totales</span><span class="resumen-val">${numPedidos}</span></div>
-    <div class="resumen-row"><span class="resumen-label">✅ Entregados</span><span class="resumen-val">${numEntregados}</span></div>
-    <div class="resumen-row"><span class="resumen-label">💰 Ventas cobradas</span><span class="resumen-val" style="color:var(--green)">$${ventasEntregadas.toFixed(2)}</span></div>
-    ${totalCostoVendido > 0 ? `<div class="resumen-row"><span class="resumen-label">  − Costo de productos vendidos</span><span class="resumen-val" style="color:var(--red-700)">−$${totalCostoVendido.toFixed(2)}</span></div>` : ""}
-    ${totalCostoVendido > 0 ? `<div class="resumen-row"><span class="resumen-label">📊 Ganancia bruta</span><span class="resumen-val" style="color:#7C3AED;font-weight:800;">$${gananciaBruta.toFixed(2)}</span></div>` : ""}
-    <div class="resumen-row"><span class="resumen-label">⏳ Por cobrar</span><span class="resumen-val" style="color:var(--amber)">$${pendienteCobrar.toFixed(2)}</span></div>`;
 
-  Object.entries(porCat).forEach(([cat, amt]) => {
-    rows += `<div class="resumen-row"><span class="resumen-label">  • ${cat}</span><span class="resumen-val" style="color:var(--red-700)">−$${amt.toFixed(2)}</span></div>`;
-  });
+  // ── Tarjetas narrativas (estilo Stitch) ─────────────────────
+  const topCat = Object.entries(porCat).sort((a,b) => b[1]-a[1])[0];
+  const utilOk = utilidadNeta >= 0;
+  resumenEl.innerHTML = `
+    <div class="resumen-highlight-grid">
+      <div class="resumen-highlight-card">
+        <div class="resumen-highlight-label">🧾 Ventas &amp; Pedidos</div>
+        <div class="resumen-highlight-headline">${numEntregados} pedido${numEntregados!==1?"s":""} entregado${numEntregados!==1?"s":""}</div>
+        <div class="resumen-highlight-desc">Generación de $${ventasEntregadas.toFixed(2)} en cobro directo de mercancía a tiendas.</div>
+      </div>
+      <div class="resumen-highlight-card">
+        <div class="resumen-highlight-label">💸 Gastos Operativos</div>
+        <div class="resumen-highlight-headline">${gastosInRange.length} gasto${gastosInRange.length!==1?"s":""} registrado${gastosInRange.length!==1?"s":""}</div>
+        <div class="resumen-highlight-desc">Deducción de $${totalGastos.toFixed(2)}${topCat ? ` en gastos del período, principalmente en ${esc(topCat[0])}` : " en gastos del período"}.</div>
+      </div>
+      <div class="resumen-highlight-card">
+        <div class="resumen-highlight-label">📈 Rendimiento Operativo</div>
+        <div class="resumen-highlight-headline">${utilOk ? "" : "−"}$${Math.abs(utilidadNeta).toFixed(2)} MXN
+          <span class="dash-kpi-badge ${utilOk ? "up" : ""}" style="${utilOk ? "" : "background:#FEE2E2;color:#B91C1C;"}margin-left:.4rem;">${utilOk ? "Óptimo" : "En rojo"}</span>
+        </div>
+        <div class="resumen-highlight-desc">Utilidad final tras descontar $${totalCostoVendido.toFixed(2)} en costo de mercancía y $${totalGastos.toFixed(2)} en gastos operativos.</div>
+      </div>
+    </div>`;
 
-  rows += `<div class="resumen-row total-row ${utilidadNeta < 0 ? "negative" : ""}">
-    <span class="resumen-label">🏦 UTILIDAD NETA REAL (${labelPeriod})</span>
-    <span class="resumen-val">$${utilidadNeta.toFixed(2)}</span>
-  </div>`;
-
-  resumenEl.innerHTML = rows;
-
-  // ── Barras de gastos por categoría ───────────────────────────
+  // ── Gastos por categoría: tarjetas con barra de progreso ─────
   const chartEl = document.getElementById("caja-gastos-chart");
   if (!Object.keys(porCat).length) {
-    chartEl.innerHTML = `<div class="empty-state" style="padding:1rem 0"><p>Sin gastos en este período.</p></div>`;
+    chartEl.innerHTML = `<div class="empty-state" style="padding:.5rem 0"><p>Sin gastos en este período.</p></div>`;
   } else {
-    const maxVal = Math.max(...Object.values(porCat));
-    chartEl.innerHTML = Object.entries(porCat)
+    chartEl.innerHTML = `<div class="gastocat-grid">` + Object.entries(porCat)
       .sort((a,b) => b[1]-a[1])
       .map(([cat, amt]) => {
-        const pct = maxVal > 0 ? (amt/maxVal*100).toFixed(1) : 0;
+        const pct = totalGastos > 0 ? (amt/totalGastos*100) : 0;
         const color = GASTO_COLORS[cat] || "#6B7280";
-        return `<div class="bar-row">
-          <div class="bar-label">${cat.length > 9 ? cat.slice(0,9)+"…" : cat}</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:${pct}%;background:${color}"></div>
+        return `<div class="gastocat-card">
+          <div class="gastocat-top">
+            <span class="gastocat-name">${esc(cat)}</span>
+            <span class="gastocat-amt">$${amt.toFixed(2)}</span>
           </div>
-          <div class="bar-val">$${amt.toFixed(0)}</div>
+          <div class="gastocat-track">
+            <div class="gastocat-fill" style="width:${pct.toFixed(1)}%;background:${color}"></div>
+          </div>
+          <div class="gastocat-pct">${pct.toFixed(1)}% del total</div>
         </div>`;
-      }).join("");
+      }).join("") + `</div>`;
   }
 
   // ── Lista de gastos ───────────────────────────────────────────
@@ -4978,13 +5606,17 @@ function renderCaja() {
   listEl.innerHTML = gastosInRange.map(g => {
     const color = GASTO_COLORS[g.categoria] || "#6B7280";
     return `<div class="gasto-item">
-      <div class="gasto-cat-dot" style="background:${color}"></div>
       <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">
+          <span class="gasto-cat-pill" style="background:${color}1A;color:${color};">${esc(g.categoria)}</span>
+          <span class="gasto-meta">${g.fecha}${g.responsable ? " · "+esc(g.responsable) : ""}</span>
+        </div>
         <div class="gasto-desc">${esc(g.descripcion || g.categoria)}</div>
-        <div class="gasto-meta">${g.categoria} · ${g.fecha}${g.responsable ? " · "+esc(g.responsable) : ""}</div>
       </div>
-      <div class="gasto-amount">−$${(+g.monto).toFixed(2)}</div>
-      <button class="gasto-del-btn" onclick="deleteGasto('${g.id}')">🗑</button>
+      <div style="text-align:right;flex-shrink:0;">
+        <div class="gasto-amount">−$${(+g.monto).toFixed(2)}</div>
+        <button class="gasto-del-btn" style="margin-top:.3rem;" onclick="deleteGasto('${g.id}')">🗑</button>
+      </div>
     </div>`;
   }).join("");
 }
@@ -5073,10 +5705,10 @@ function initDemoMode() {
   ];
 
   orders = [
-    { id:"o1", customerName:"Mini Super Lupita", ownerName:"Lupita", address:"Av. Hidalgo 45", total:1245, status:"Pendiente",
+    { id:"o1", customerName:"Mini Super Lupita", ownerName:"Lupita", address:"Av. Hidalgo 45", total:1245, status:"Entregado",
       lines:[{productId:"p1",emoji:"🫙",name:"Caja de Aceite",qty:2,subtotal:960},{productId:"p3",emoji:"🥛",name:"Caja de Leche",qty:1,subtotal:285}],
       createdAt:{ toDate: () => new Date(Date.now()-3600000) } },
-    { id:"o2", customerName:"Tienda El Amigo", ownerName:"Jorge Torres", address:"Calle Morelos 88", total:2540, status:"Pendiente",
+    { id:"o2", customerName:"Tienda El Amigo", ownerName:"Jorge Torres", address:"Calle Morelos 88", total:2540, status:"Entregado",
       lines:[{productId:"p11",emoji:"🐶",name:"Costal Croquetas 20kg",qty:3,subtotal:1950},{productId:"p4",emoji:"🥤",name:"Paquete Refrescos 2.5L",qty:25,subtotal:6125},{productId:"p8",emoji:"💧",name:"Garrafón Agua 20L",qty:3,subtotal:105}],
       createdAt:{ toDate: () => new Date(Date.now()-1800000) } }
   ];
@@ -5111,7 +5743,6 @@ function initDemoMode() {
   renderStockList();
   renderOrdersAdmin();
   renderCaja();
-  renderOrderScheduleAdmin();
   renderVendedoresList();
   populateLoginVendedores();
   renderBulkTable();
