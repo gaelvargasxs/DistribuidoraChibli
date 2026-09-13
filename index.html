@@ -2172,18 +2172,6 @@ body:has(#view-pedido.active) #cart-fab { display: none !important; }
       <div class="stock-alert-list" id="stock-alert-list"></div>
     </div>
 
-    <!-- Info acceso tiendas -->
-    <div class="card" style="background:var(--amber-lt);border:1.5px solid var(--amber);">
-      <div class="card-title" style="color:var(--amber);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Acceso de tiendas
-      </div>
-      <p style="font-size:.8rem;color:var(--amber);line-height:1.5;">
-        Cada tienda entra con su <strong>nombre de tienda</strong> + <strong>contraseña</strong> que asignas al registrarla.<br/>
-        Solo pueden pedir para su propia tienda. El admin usa PIN <strong>1234</strong> (cámbialo en el código).
-      </p>
-    </div>
-
     <!-- Control de Inventario -->
     <div class="card">
       <div class="card-title">
@@ -2868,13 +2856,14 @@ function applySession() {
 }
 
 function showAdminUI() {
-  // Admin ve clientes, admin, caja — NO catálogo, pedido ni historial
   document.body.classList.add("role-admin");
   document.body.classList.remove("role-vendedor");
   document.querySelectorAll(".tab-btn").forEach(b => b.style.display = "");
+  // Admin NO ve estas pestañas en el bar
   document.querySelector("[data-tab='catalogo']").style.display  = "none";
   document.querySelector("[data-tab='pedido']").style.display    = "none";
   document.querySelector("[data-tab='historial']").style.display = "none";
+  document.querySelector("[data-tab='clientes']").style.display  = "none";
   const registerCard = document.getElementById("register-store-card");
   if (registerCard) registerCard.style.display = "";
   const vendAdminSec = document.getElementById("vendedores-admin-section");
@@ -4904,14 +4893,26 @@ function doPrint(inner) {
   let pageStyle = "";
   if (isThermal) {
     const mm = size === "58" ? "58mm" : "80mm";
-    pageStyle = `@page{size:${mm} auto;margin:0mm}body{font-family:'Courier New',Courier,monospace;background:#fff;--thermal-width:${mm}}`;
+    pageStyle = `@page{size:${mm} auto;margin:0mm}
+    body{font-family:'Courier New',Courier,monospace;background:#fff;width:${mm};}`;
   } else {
-    pageStyle = `@page{size:A4;margin:1.5cm}body{font-family:Arial,sans-serif;background:#fff}`;
+    pageStyle = `@page{size:A4;margin:1.5cm}
+    body{font-family:Arial,sans-serif;background:#fff;}`;
   }
-  const frame = document.getElementById("print-frame");
-  frame.innerHTML = `<style>${pageStyle}</style>${inner}`;
-  window.print();
-  setTimeout(() => { frame.innerHTML = ""; }, 1500);
+
+  const win = window.open("", "_blank", "width=600,height=800");
+  if (!win) { toast("⚠ Permite las ventanas emergentes para imprimir"); return; }
+  win.document.write(`<!DOCTYPE html>
+    <html><head><meta charset="UTF-8">
+    <title>Tickets Chibli</title>
+    <style>${pageStyle}</style>
+    </head><body>${inner}</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => {
+    win.print();
+    setTimeout(() => win.close(), 1000);
+  }, 400);
 }
 
 async function setOrderStatus(orderId, status) {
