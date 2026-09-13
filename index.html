@@ -1412,7 +1412,26 @@ body:has(#view-pedido.active) #cart-fab { display: none !important; }
 }
 #print-frame { display:none; }
 
-/* ── Responsive: wider screens ───────────────────────────────── */
+/* ── Admin tabs móvil: 3 fijos + Más ─────────────────────────── */
+@media (max-width: 767px) {
+  .admin-tab-secondary { display: none !important; }
+  .admin-tab-main { display: flex !important; }
+  body.role-vendedor .admin-tab-main { display: none !important; }
+}
+@media (min-width: 768px) {
+  #tab-more-btn { display: none !important; }
+  .admin-tab-secondary { display: flex !important; }
+}
+
+.more-menu-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .4rem; padding: 1rem .5rem;
+  background: #F9FAFB; border-radius: 12px;
+  border: 1.5px solid #E5E7EB; font-size: .78rem; font-weight: 700; color: #374151;
+  transition: background .15s, border-color .15s;
+}
+.more-menu-item:active { background: #FEE2E2; border-color: #FECACA; color: #C0141A; }
+
 @media (min-width: 520px) {
   #product-grid { grid-template-columns: repeat(3, 1fr); }
   .view { max-width: 540px; margin: 0 auto; }
@@ -1704,27 +1723,37 @@ body:has(#view-pedido.active) #cart-fab { display: none !important; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
     HISTORIAL
   </button>
-  <button class="tab-btn" data-tab="admin" data-admin-sub="dashboard" onclick="switchTab('admin','dashboard')">
+
+  <!-- ADMIN TABS: 3 fijos en móvil + botón Más -->
+  <button class="tab-btn admin-tab-main" data-tab="admin" data-admin-sub="dashboard" onclick="switchTab('admin','dashboard')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
     <span class="tab-label-mobile">DASHBOARD</span><span class="tab-label-desktop">Dashboard</span>
   </button>
-  <button class="tab-btn" data-tab="admin" data-admin-sub="productos" onclick="switchTab('admin','productos')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-    <span class="tab-label-mobile">PRODUCTOS</span><span class="tab-label-desktop">Inventario &amp; SKUs</span>
+  <button class="tab-btn admin-tab-main" data-tab="admin" data-admin-sub="productos" onclick="switchTab('admin','productos')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+    <span class="tab-label-mobile">INVENTARIO</span><span class="tab-label-desktop">Inventario &amp; SKUs</span>
   </button>
-  <button class="tab-btn" data-tab="admin" data-admin-sub="pedidos" onclick="switchTab('admin','pedidos')">
+  <button class="tab-btn admin-tab-main" data-tab="caja" onclick="switchTab('caja')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    <span class="tab-label-mobile">FINANZAS</span><span class="tab-label-desktop">Finanzas &amp; Gastos</span>
+  </button>
+
+  <!-- Botón Más (solo móvil admin) -->
+  <button class="tab-btn admin-tab-main" id="tab-more-btn" onclick="toggleMoreMenu()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    MÁS
+  </button>
+
+  <!-- Tabs ocultos en móvil (desktop los ve todos) -->
+  <button class="tab-btn admin-tab-secondary" data-tab="admin" data-admin-sub="pedidos" onclick="switchTab('admin','pedidos')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
     <span class="tab-label-mobile">PEDIDOS</span><span class="tab-label-desktop">Pedidos &amp; Rutas</span>
   </button>
-  <button class="tab-btn" data-tab="admin" data-admin-sub="tickets" onclick="switchTab('admin','tickets')">
+  <button class="tab-btn admin-tab-secondary" data-tab="admin" data-admin-sub="tickets" onclick="switchTab('admin','tickets')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9a3 3 0 010-6h18a3 3 0 010 6 3 3 0 000 6 3 3 0 010 6H3a3 3 0 010-6 3 3 0 000-6z"/><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2,2"/></svg>
-    TICKETS
+    <span class="tab-label-mobile">TICKETS</span><span class="tab-label-desktop">Tickets</span>
   </button>
-  <button class="tab-btn" data-tab="caja" onclick="switchTab('caja')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-    <span class="tab-label-mobile">CAJA</span><span class="tab-label-desktop">Finanzas &amp; Gastos</span>
-  </button>
-  <button class="tab-btn" data-tab="admin" data-admin-sub="stats" onclick="switchTab('admin','stats')">
+  <button class="tab-btn admin-tab-secondary" data-tab="admin" data-admin-sub="stats" onclick="switchTab('admin','stats')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     <span class="tab-label-mobile">STATS</span><span class="tab-label-desktop">Reportes &amp; BI</span>
   </button>
@@ -2569,6 +2598,35 @@ body:has(#view-pedido.active) #cart-fab { display: none !important; }
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
+     MENÚ "MÁS" — drawer móvil admin
+══════════════════════════════════════════════════════════════ -->
+<div id="more-menu-backdrop" onclick="closeMoreMenu()" style="display:none;position:fixed;inset:0;z-index:299;background:rgba(0,0,0,.35);"></div>
+<div id="more-menu" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:#fff;border-radius:20px 20px 0 0;padding:1rem 1rem 2rem;
+  box-shadow:0 -8px 32px rgba(0,0,0,.18);max-width:540px;margin:0 auto;">
+  <div style="width:36px;height:4px;background:#E5E7EB;border-radius:99px;margin:0 auto .85rem;"></div>
+  <div style="font-size:.7rem;font-weight:800;letter-spacing:.06em;color:#9CA3AF;margin-bottom:.65rem;text-transform:uppercase;">Más opciones</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.55rem;">
+    <button class="more-menu-item" onclick="switchTab('admin','pedidos');closeMoreMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
+      Pedidos
+    </button>
+    <button class="more-menu-item" onclick="switchTab('admin','tickets');closeMoreMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M3 9a3 3 0 010-6h18a3 3 0 010 6 3 3 0 000 6 3 3 0 010 6H3a3 3 0 010-6 3 3 0 000-6z"/><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2,2"/></svg>
+      Tickets
+    </button>
+    <button class="more-menu-item" onclick="switchTab('admin','stats');closeMoreMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Estadísticas
+    </button>
+    <button class="more-menu-item" onclick="switchTab('clientes');closeMoreMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Clientes
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
      TOAST
 ══════════════════════════════════════════════════════════════ -->
 <div id="toast"></div>
@@ -2596,6 +2654,34 @@ function switchAdminTab(tab, btn) {
   if (tab === "tickets")   renderTickets();
   if (tab === "stats")     renderStats();
   if (tab === "productos") { _bulkDirty = {}; renderBulkTable(); }
+}
+
+function toggleMoreMenu() {
+  const menu     = document.getElementById("more-menu");
+  const backdrop = document.getElementById("more-menu-backdrop");
+  const isOpen   = menu.style.display !== "none";
+  if (isOpen) {
+    closeMoreMenu();
+  } else {
+    menu.style.display     = "block";
+    backdrop.style.display = "block";
+    // Animación de entrada
+    menu.style.transform   = "translateY(100%)";
+    menu.style.transition  = "transform .25s cubic-bezier(.4,0,.2,1)";
+    requestAnimationFrame(() => { menu.style.transform = "translateY(0)"; });
+  }
+}
+
+function closeMoreMenu() {
+  const menu     = document.getElementById("more-menu");
+  const backdrop = document.getElementById("more-menu-backdrop");
+  menu.style.transform = "translateY(100%)";
+  setTimeout(() => {
+    menu.style.display     = "none";
+    backdrop.style.display = "none";
+  }, 220);
+  // Quitar active del botón Más
+  document.getElementById("tab-more-btn")?.classList.remove("active");
 }
 
 // ════════════════════════════════════════════════════════════════
