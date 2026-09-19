@@ -562,6 +562,7 @@ body:has(#view-pedido.active) #cart-fab { display: none !important; }
   display: none; align-items: center; justify-content: center;
 }
 .customer-item.selected .customer-check { display: flex; }
+.store-card-v2.selected .customer-check { display: flex; }
 
 /* ── Checkout: Asignar Cliente (Paso 2) ───────────────────────── */
 .checkout-assign-header {
@@ -577,11 +578,6 @@ body:has(#view-pedido.active) #cart-fab { display: none !important; }
 .checkout-assign-total { text-align: right; flex-shrink: 0; }
 .checkout-assign-total-label { font-size: .68rem; color: var(--muted); }
 .checkout-assign-total-amount { font-size: 1.05rem; font-weight: 900; color: var(--ink); }
-.customer-item-right { text-align: right; flex-shrink: 0; }
-.customer-credit-label { font-size: .65rem; color: var(--muted); }
-.customer-credit-amount { font-size: .82rem; font-weight: 800; color: #16A34A; }
-.customer-modalidad-label { font-size: .65rem; color: var(--muted); }
-.customer-modalidad-value { font-size: .78rem; font-weight: 700; color: var(--ink-700); }
 .checkout-confirm-row { display: flex; gap: .55rem; margin-top: .25rem; align-items: center; }
 .checkout-new-btn {
   width: 52px; height: 52px; flex-shrink: 0; border-radius: var(--radius-sm);
@@ -592,14 +588,6 @@ body:has(#view-pedido.active) #cart-fab { display: none !important; }
 .checkout-confirm-row .btn { flex: 1; margin: 0; }
 
 /* ── Order / Cart ────────────────────────────────────────────── */
-.order-line {
-  display: flex; align-items: center; gap: .5rem;
-  padding: .6rem 0; border-bottom: 1px solid var(--gray-100);
-}
-.order-line:last-child { border-bottom: none; }
-.order-line-name { flex: 1; font-size: .85rem; font-weight: 600; }
-.order-line-qty { font-size: .8rem; color: var(--gray-400); }
-.order-line-total { font-size: .88rem; font-weight: 700; color: var(--red-700); }
 .order-total-row {
   display: flex; justify-content: space-between; align-items: center;
   padding: .75rem 0 .25rem; border-top: 2px solid var(--gray-200);
@@ -1449,6 +1437,22 @@ body:has(#view-pedido.active) #cart-fab { display: none !important; }
 }
 .ticket-print-btn:active { filter:brightness(.9); }
 
+/* ── Tickets: KPIs + fila compacta ────────────────────────────── */
+.tix-kpi-row { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-bottom:.85rem; }
+.tix-order-card { background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow-sm); margin-bottom:.55rem; overflow:hidden; }
+.tix-order-top { display:flex; align-items:center; gap:.6rem; padding:.7rem .85rem; cursor:pointer; }
+.tix-order-main { flex:1; min-width:0; }
+.tix-order-folio-row { display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
+.tix-order-folio { font-weight:800; font-size:.85rem; color:var(--gray-900); }
+.tix-order-vend { font-size:.68rem; font-weight:700; color:#2563EB; background:#EEF4FF; padding:.08rem .4rem; border-radius:10px; }
+.tix-order-meta { font-size:.72rem; color:var(--gray-400); margin-top:.15rem; }
+.tix-order-right { text-align:right; flex-shrink:0; display:flex; align-items:center; gap:.5rem; }
+.tix-order-amt { font-weight:800; font-size:.9rem; color:var(--red-700); }
+.tix-chevron { transition:transform .2s; color:var(--gray-400); flex-shrink:0; }
+.tix-order-card.open .tix-chevron { transform:rotate(180deg); }
+.tix-order-detail { display:none; }
+.tix-order-card.open .tix-order-detail { display:block; }
+
 /* ── Print ───────────────────────────────────────────────────── */
 @media print {
   body > * { display:none !important; }
@@ -1610,6 +1614,77 @@ body.role-vendedor #tab-more-btn { display: none !important; }
 }
 .descuento-input:focus { border-color: var(--red-600); }
 .order-line-desc { font-size: .7rem; color: var(--green); font-weight: 700; }
+
+/* ── Carrito rediseñado (estilo Stitch) ──────────────────────── */
+.pedido-vendor-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--gray-50); border-radius: 10px;
+  padding: .6rem .8rem; margin-bottom: .75rem; font-size: .78rem;
+}
+.pedido-vendor-bar .draft-pill {
+  background: #FEE2E2; color: #B91C1C; font-weight: 800;
+  font-size: .64rem; padding: .2rem .55rem; border-radius: 20px;
+}
+.cart-item-card {
+  background: var(--gray-50); border-radius: 12px;
+  padding: .8rem .85rem; margin-bottom: .6rem;
+}
+.cart-item-card:last-child { margin-bottom: 0; }
+.cart-item-top { display: flex; align-items: flex-start; gap: .6rem; }
+.cart-item-emoji { font-size: 1.6rem; flex-shrink: 0; line-height: 1.2; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-name { font-size: .87rem; font-weight: 700; color: var(--gray-800); }
+.cart-item-meta { font-size: .72rem; color: var(--gray-400); margin-top: .2rem; }
+.cart-item-price { font-size: .84rem; font-weight: 800; color: var(--gray-800); margin-top: .3rem; }
+.cart-item-del {
+  background: var(--gray-100); color: var(--gray-400);
+  border-radius: 8px; padding: .35rem .5rem; flex-shrink: 0;
+}
+.cart-item-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: .65rem; padding-top: .6rem; border-top: 1px solid var(--gray-200);
+}
+.cart-item-qty-label { font-size: .76rem; color: var(--gray-500); }
+.qty-stepper { display: flex; align-items: center; gap: 0; background: var(--white); border-radius: 8px; border: 1.5px solid var(--gray-200); overflow: hidden; }
+.qty-stepper button {
+  width: 30px; height: 30px; font-size: 1rem; font-weight: 800;
+  color: var(--gray-600); background: var(--white);
+}
+.qty-stepper button:active { background: var(--gray-100); }
+.qty-stepper span { width: 34px; text-align: center; font-weight: 800; font-size: .85rem; }
+
+.global-discount-card {
+  background: var(--gray-50); border-radius: 12px; padding: .8rem .85rem; margin: .75rem 0;
+}
+.global-discount-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: .6rem; }
+.global-discount-title span { font-size: .8rem; font-weight: 700; color: var(--gray-800); }
+.global-discount-row { display: flex; gap: .4rem; }
+.global-discount-row input { flex: 1; text-align: center; font-weight: 700; }
+.global-discount-row button {
+  background: var(--gray-800); color: var(--white); font-weight: 700;
+  font-size: .82rem; padding: 0 1rem; border-radius: 8px; white-space: nowrap;
+}
+.global-discount-savings { font-size: .74rem; color: var(--gray-500); margin-top: .55rem; text-align: right; }
+
+.order-breakdown-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .4rem 0; font-size: .84rem; color: var(--gray-600);
+}
+.order-breakdown-row b { color: var(--gray-800); }
+
+.store-card-v2 {
+  background: var(--gray-50); border-radius: 12px; padding: .8rem .85rem; margin-bottom: .6rem;
+  border: 1.5px solid transparent;
+}
+.store-card-v2.selected { border-color: var(--red-600); background: #FEF2F2; }
+.store-card-v2-top { display: flex; align-items: flex-start; gap: .6rem; }
+.store-card-v2-name { font-size: .88rem; font-weight: 700; color: var(--gray-800); }
+.store-card-v2-meta { font-size: .72rem; color: var(--gray-400); margin-top: .15rem; }
+.store-card-v2-badge {
+  font-size: .66rem; font-weight: 700; color: var(--gray-500);
+  background: var(--white); border: 1px solid var(--gray-200);
+  padding: .2rem .5rem; border-radius: 20px; display: inline-block; margin-top: .5rem;
+}
 .stats-vendedor-card {
   background: var(--white); border-radius: var(--radius);
   box-shadow: var(--shadow-sm); padding: 1rem;
@@ -1793,7 +1868,7 @@ body.role-vendedor #tab-more-btn { display: none !important; }
     <div class="sidebar-header-title">Panel Central</div>
     <div class="sidebar-header-sub">Administración &amp; Control</div>
   </div>
-  <button class="tab-btn active" data-tab="clientes" onclick="switchTab('clientes')">
+  <button class="tab-btn active admin-tab-secondary" data-tab="clientes" onclick="switchTab('clientes')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
     <span class="tab-label-mobile">CLIENTES</span><span class="tab-label-desktop">Configuración</span>
   </button>
@@ -1832,7 +1907,7 @@ body.role-vendedor #tab-more-btn { display: none !important; }
   </button>
 
   <!-- Tabs ocultos en móvil (desktop los ve todos) -->
-  <button class="tab-btn admin-tab-main" data-tab="admin" data-admin-sub="pedidos" onclick="switchTab('admin','pedidos')">
+  <button class="tab-btn admin-tab-secondary" data-tab="admin" data-admin-sub="pedidos" onclick="switchTab('admin','pedidos')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
     <span class="tab-label-mobile">VENDEDORES</span><span class="tab-label-desktop">Vendedores</span>
   </button>
@@ -2009,11 +2084,33 @@ body.role-vendedor #tab-more-btn { display: none !important; }
 <section class="view" id="view-pedido">
 
   <div class="card" id="cart-summary-card">
+    <div class="pedido-vendor-bar">
+      <span>🧾 Vendedor: <strong id="pedido-vendor-name">—</strong></span>
+      <span class="draft-pill">#BORRADOR-PED</span>
+    </div>
     <div class="card-title">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
-      Resumen del pedido
+      Productos en el pedido
     </div>
     <div id="cart-lines"></div>
+
+    <div class="global-discount-card">
+      <div class="global-discount-title">
+        <span>🏷️ Descuento a todo el pedido</span>
+      </div>
+      <div class="global-discount-row">
+        <input type="number" id="global-discount-input" placeholder="0" min="0" max="100" />
+        <button onclick="applyGlobalDiscount()">Aplicar a todo</button>
+      </div>
+      <div class="global-discount-savings" id="global-discount-savings"></div>
+    </div>
+
+    <div class="order-breakdown-row">
+      <span>Subtotal bruto</span><b id="cart-subtotal-bruto">$0.00</b>
+    </div>
+    <div class="order-breakdown-row" id="cart-descuento-row" style="display:none;">
+      <span>Descuento aplicado</span><b style="color:var(--green);" id="cart-descuento-total">−$0.00</b>
+    </div>
     <div class="order-total-row">
       <span class="order-total-label">TOTAL A PAGAR</span>
       <span class="order-total-amount" id="cart-grand-total">$0.00</span>
@@ -2032,6 +2129,14 @@ body.role-vendedor #tab-more-btn { display: none !important; }
         <div class="checkout-assign-total-amount" id="checkout-total-amount">$0.00</div>
       </div>
     </div>
+    <div style="position:relative;margin-bottom:.7rem;">
+      <input type="search" id="checkout-store-search" placeholder="Buscar tienda por nombre, dueño o zona…"
+             oninput="renderCheckoutStorePicker(this.value)" style="padding-left:2.2rem;" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"
+           style="position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--gray-400);">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </div>
     <div id="checkout-store-list"></div>
   </div>
 
@@ -2046,7 +2151,7 @@ body.role-vendedor #tab-more-btn { display: none !important; }
   </div>
 
   <button class="btn btn-secondary" style="margin-top:.5rem;" onclick="clearCart()">
-    Limpiar carrito
+    🛒 Vaciar Carrito
   </button>
 
   <div id="cart-empty" class="empty-state" style="display:none;">
@@ -2476,11 +2581,34 @@ body.role-vendedor #tab-more-btn { display: none !important; }
     <div class="card">
       <div class="card-title">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        Imprimir tickets
+        Impresión de Tickets
       </div>
+
+      <div class="tix-kpi-row">
+        <div class="dash-kpi-card dash-kpi-green">
+          <div class="dash-kpi-top">
+            <span class="dash-kpi-label">Tickets de hoy</span>
+            <span class="dash-kpi-icon">🧾</span>
+          </div>
+          <div class="dash-kpi-value" id="tix-kpi-hoy">0</div>
+          <div class="dash-kpi-sub" id="tix-kpi-hoy-sub">$0.00</div>
+        </div>
+        <div class="dash-kpi-card dash-kpi-purple">
+          <div class="dash-kpi-top">
+            <span class="dash-kpi-label">Impresos hoy</span>
+            <span class="dash-kpi-icon">🖨</span>
+          </div>
+          <div class="dash-kpi-value" id="tix-kpi-impresos">0</div>
+          <div class="dash-kpi-sub" id="tix-kpi-impresos-sub">de 0 tickets</div>
+        </div>
+      </div>
+
       <div class="tickets-toolbar">
         <select id="ticket-filter-status" style="display:none;">
           <option value="">Todos los estados</option>
+        </select>
+        <select id="ticket-filter-vendedor" onchange="renderTickets()">
+          <option value="">Todos los vendedores</option>
         </select>
         <select id="ticket-filter-store" onchange="renderTickets()">
           <option value="">Todas las tiendas</option>
@@ -2505,16 +2633,17 @@ body.role-vendedor #tab-more-btn { display: none !important; }
         Imprimir todos los visibles
       </button>
 
-      <!-- ⚠ Resumen de Pendientes (productos pesados/grandes a juntar) -->
+      <!-- ⚠ Resumen de Pendientes (productos pesados/grandes a juntar) — solo de hoy -->
       <div class="card" id="pendientes-summary-card" style="display:none;background:#fff7ed;border:1.5px solid #f59e0b;">
         <div class="card-title" style="color:#92400e;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          Resumen de Productos Pesados (a cargar hoy)
+          Ticket Único de Carga Pesada — Hoy
         </div>
+        <div style="font-size:.75rem;color:#b45309;margin:-.3rem 0 .5rem;">Consolidado de productos pesados de todos los pedidos de hoy visibles con este filtro.</div>
         <div id="pendientes-summary-list"></div>
         <button class="btn btn-secondary" style="margin-top:.6rem;" onclick="printPendientesSummary()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          Imprimir resumen de pendientes
+          Imprimir Ticket Único de Carga Pesada
         </button>
       </div>
 
@@ -3670,6 +3799,11 @@ function renderCart() {
   confirmBtn.style.display  = "";
   emptyEl.style.display     = "none";
 
+  const vendNameEl = document.getElementById("pedido-vendor-name");
+  if (vendNameEl) vendNameEl.textContent = currentSession?.vendedorNombre || (currentSession?.role === "admin" ? "Administrador" : "—");
+
+  let subtotalBruto = 0;
+
   linesEl.innerHTML = Object.entries(cart).map(([key, qty]) => {
     const isCaja    = key.endsWith("_caja");
     const productId = isCaja ? key.replace("_caja", "") : key;
@@ -3680,26 +3814,69 @@ function renderCart() {
     const descPct    = descuentos[productId] || 0;
     const precioFinal = p.price * (1 - descPct / 100);
     const subtotal   = precioFinal * unitQty;
-    const label      = isCaja
-      ? `${p.emoji||"📦"} ${esc(p.name)} <span style="font-size:.7rem;color:var(--red-600);font-weight:700;">📦 ×${qty} caja${qty>1?"s":""} (${unitQty} pzas)</span>`
-      : `${p.emoji||"📦"} ${esc(p.name)}`;
-    const descuentoStr = descPct > 0 ? `<span class="order-line-desc">−${descPct}% desc.</span>` : "";
-    return `<div class="order-line" style="flex-wrap:wrap;gap:.35rem;">
-      <span class="order-line-name" style="flex:1 1 120px;">${label}</span>
-      <div style="display:flex;align-items:center;gap:.35rem;flex-shrink:0;">
-        <span class="order-line-qty">×${unitQty}</span>
-        <label style="font-size:.68rem;margin:0;color:var(--gray-400);">Desc%</label>
+    subtotalBruto += p.price * unitQty;
+
+    const cantidadLabel = isCaja ? `${qty} caja${qty>1?"s":""}` : `${qty} pieza${qty>1?"s":""}`;
+    const precioUnitStr = isCaja && qty > 0 ? ` ($${p.price.toFixed(2)} c/u)` : "";
+    const descuentoStr = descPct > 0 ? `<span class="order-line-desc">−${descPct}% desc. aplicado</span>` : "";
+
+    return `<div class="cart-item-card">
+      <div class="cart-item-top">
+        <span class="cart-item-emoji">${p.emoji||"📦"}</span>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${esc(p.name)}</div>
+          <div class="cart-item-meta">${cajaPiezas>1?`${cajaPiezas} pzas/caja · `:""}${p.unit?esc(p.unit)+" · ":""}$${p.price.toFixed(2)}${precioUnitStr}</div>
+          <div class="cart-item-price">$${subtotal.toFixed(2)} ${descuentoStr}</div>
+        </div>
+        <button class="cart-item-del" onclick="changeQtyInCart('${key}', -${qty})" title="Quitar del pedido">🗑</button>
+      </div>
+      <div class="cart-item-bottom">
+        <span class="cart-item-qty-label">Cantidad: ${cantidadLabel}</span>
+        <div class="qty-stepper">
+          <button onclick="changeQtyInCart('${key}', -1)">−</button>
+          <span>${qty}</span>
+          <button onclick="changeQtyInCart('${key}', 1)">+</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.35rem;margin-top:.6rem;">
+        <label style="font-size:.7rem;margin:0;color:var(--gray-400);">Desc. individual %</label>
         <input type="number" class="descuento-input" value="${descPct}" min="0" max="100" step="1"
                onchange="setDescuento('${productId}', this.value)" title="% de descuento" />
-        <span class="order-line-total">$${subtotal.toFixed(2)}</span>
       </div>
-      ${descuentoStr ? `<div style="width:100%;padding-left:.2rem;">${descuentoStr}</div>` : ""}
     </div>`;
   }).join("");
 
-  totalEl.textContent = `$${calcTotal().toFixed(2)}`;
+  const total = calcTotal();
+  const totalDescuento = subtotalBruto - total;
+
+  document.getElementById("cart-subtotal-bruto").textContent = `$${subtotalBruto.toFixed(2)}`;
+  const descRow = document.getElementById("cart-descuento-row");
+  if (totalDescuento > 0.005) {
+    descRow.style.display = "flex";
+    document.getElementById("cart-descuento-total").textContent = `−$${totalDescuento.toFixed(2)}`;
+  } else {
+    descRow.style.display = "none";
+  }
+  totalEl.textContent = `$${total.toFixed(2)}`;
 
   renderCheckoutStorePicker();
+}
+
+// ── Cambiar cantidad directo desde la tarjeta del carrito ────────
+function changeQtyInCart(productKey, delta) {
+  changeQty(productKey, delta);
+  renderCart();
+}
+
+// ── Aplicar el mismo % de descuento a todas las líneas del carrito ──
+function applyGlobalDiscount() {
+  const val = document.getElementById("global-discount-input").value;
+  const pct = Math.max(0, Math.min(100, parseFloat(val) || 0));
+  Object.keys(cart).forEach(key => {
+    const productId = key.endsWith("_caja") ? key.replace("_caja", "") : key;
+    setDescuento(productId, pct);
+  });
+  toast(pct > 0 ? `✅ ${pct}% aplicado a todo el pedido` : "Descuento quitado de todo el pedido");
 }
 
 // ── PASO 2: Asignar tienda de entrega dentro del carrito ─────────
@@ -3716,7 +3893,9 @@ function renderCheckoutStorePicker(filter = "") {
 
   const f = filter.toLowerCase();
   const filtered = customers.filter(c =>
-    c.storeName.toLowerCase().includes(f) || (c.ownerName||"").toLowerCase().includes(f)
+    c.storeName.toLowerCase().includes(f) ||
+    (c.ownerName||"").toLowerCase().includes(f) ||
+    (c.zone||"").toLowerCase().includes(f)
   );
 
   if (!filtered.length) {
@@ -3726,24 +3905,20 @@ function renderCheckoutStorePicker(filter = "") {
   }
 
   listEl.innerHTML = filtered.map(c => `
-    <div class="customer-item ${c.id === activeCustomerId ? "selected" : ""}"
+    <div class="store-card-v2 ${c.id === activeCustomerId ? "selected" : ""}"
          onclick="selectCheckoutCustomer('${c.id}')">
-      <div class="customer-avatar">${c.storeName.charAt(0).toUpperCase()}</div>
-      <div class="customer-info">
-        <div class="customer-name">${esc(c.storeName)}</div>
-        <div class="customer-detail">${esc(c.ownerName||"")}${c.folio ? " · " + esc(c.folio) : ""}</div>
-      </div>
-      <div class="customer-item-right">
-        ${c.creditLimit ? `
-          <div class="customer-credit-label">Límite Crédito</div>
-          <div class="customer-credit-amount">$${(+c.creditLimit).toLocaleString("es-MX", {minimumFractionDigits:2})}</div>
-        ` : `
-          <div class="customer-modalidad-label">Modalidad</div>
-          <div class="customer-modalidad-value">Contado / Efectivo</div>
-        `}
-      </div>
-      <div class="customer-check">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      <div class="store-card-v2-top">
+        <div class="customer-avatar">${c.storeName.charAt(0).toUpperCase()}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="store-card-v2-name">${esc(c.storeName)}</div>
+          <div class="store-card-v2-meta">${esc(c.ownerName||"")}${c.zone ? " · Zona: " + esc(c.zone) : ""}</div>
+          <span class="store-card-v2-badge">${c.creditLimit
+            ? `💳 Límite Crédito: $${(+c.creditLimit).toLocaleString("es-MX", {minimumFractionDigits:2})}`
+            : "💵 Contado / Efectivo"}</span>
+        </div>
+        <div class="customer-check">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
       </div>
     </div>`).join("");
 }
@@ -4855,24 +5030,61 @@ function toggleRendPedidos(listId, btn) {
 // ════════════════════════════════════════════════════════════════
 // TICKETS
 // ════════════════════════════════════════════════════════════════
+function isOrderToday(o) {
+  if (!o.createdAt?.toDate) return true;
+  const d = o.createdAt.toDate();
+  const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  return ds === getHoyStr();
+}
+
+function getPrintedTicketsToday() {
+  try { return new Set(JSON.parse(localStorage.getItem("chibli_printed_" + getHoyStr()) || "[]")); }
+  catch(e) { return new Set(); }
+}
+function markTicketPrinted(orderId) {
+  try {
+    const set = getPrintedTicketsToday();
+    set.add(orderId);
+    localStorage.setItem("chibli_printed_" + getHoyStr(), JSON.stringify([...set]));
+  } catch(e) { /* localStorage no disponible, se ignora */ }
+}
+
 function renderTickets() {
   const statusFilter = (document.getElementById("ticket-filter-status")||{}).value || "";
   const storeSelect  = document.getElementById("ticket-filter-store");
-  if (!storeSelect) return;
+  const vendSelect   = document.getElementById("ticket-filter-vendedor");
+  if (!storeSelect || !vendSelect) return;
 
   const prevStore = storeSelect.value;
   const storeNames = [...new Set(orders.map(o => o.customerName).filter(Boolean))].sort();
   storeSelect.innerHTML = `<option value="">Todas las tiendas</option>` +
     storeNames.map(n => `<option value="${esc(n)}"${n===prevStore?" selected":""}>${esc(n)}</option>`).join("");
 
+  const prevVend = vendSelect.value;
+  vendSelect.innerHTML = `<option value="">Todos los vendedores</option>` +
+    vendedores.map(v => `<option value="${v.id}"${v.id===prevVend?" selected":""}>${esc(v.folio)} — ${esc(v.nombre)}</option>`).join("");
+
   const storeFilter = storeSelect.value;
+  const vendFilter  = vendSelect.value;
   const filtered = orders.filter(o => {
     if (statusFilter && o.status !== statusFilter) return false;
     if (storeFilter  && o.customerName !== storeFilter) return false;
+    if (vendFilter   && o.vendedorId !== vendFilter) return false;
     return true;
   });
 
-  renderPendientesSummary(filtered);
+  // ── KPIs (siempre sobre lo de hoy, respetando los filtros de tienda/vendedor) ──
+  const todayFiltered = filtered.filter(isOrderToday);
+  const totalHoy = todayFiltered.reduce((s,o) => s + (+o.total||0), 0);
+  const printedToday = getPrintedTicketsToday();
+  const impresosCount = todayFiltered.filter(o => printedToday.has(o.id)).length;
+  const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+  set("tix-kpi-hoy", todayFiltered.length);
+  set("tix-kpi-hoy-sub", `$${totalHoy.toFixed(2)}`);
+  set("tix-kpi-impresos", impresosCount);
+  set("tix-kpi-impresos-sub", `de ${todayFiltered.length} tickets`);
+
+  renderPendientesSummary(todayFiltered);
 
   const el = document.getElementById("tickets-list");
   if (!el) return;
@@ -4880,7 +5092,12 @@ function renderTickets() {
     el.innerHTML = `<div class="empty-state"><p>Sin pedidos para este filtro.</p></div>`;
     return;
   }
-  el.innerHTML = filtered.map(o => buildTicketCard(o)).join("");
+  const sorted = [...filtered].sort((a,b) => {
+    const da = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
+    const db_ = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+    return db_ - da;
+  });
+  el.innerHTML = sorted.map(o => buildTicketCard(o, printedToday.has(o.id))).join("");
 }
 
 // ── Resumen de productos "pesados" (para cargar/entregar) ──────
@@ -4940,43 +5157,58 @@ function renderPendientesSummary(filteredOrders) {
 function printPendientesSummary() {
   const statusFilter = (document.getElementById("ticket-filter-status")||{}).value || "";
   const storeFilter  = (document.getElementById("ticket-filter-store")||{}).value  || "";
+  const vendFilter   = (document.getElementById("ticket-filter-vendedor")||{}).value || "";
   const filtered = orders.filter(o => {
     if (statusFilter && o.status !== statusFilter) return false;
     if (storeFilter  && o.customerName !== storeFilter) return false;
+    if (vendFilter   && o.vendedorId !== vendFilter) return false;
     return true;
-  });
+  }).filter(isOrderToday);
   const summary = getPendientesSummary(filtered);
   if (!summary.length) { toast("⚠ No hay productos pendientes para este filtro"); return; }
   doPrint(buildPendientesPrint(summary));
 }
 
-function buildTicketCard(o) {
-  const dateStr = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleString("es-MX") : "—";
-  const sc = "status-entregado";
+function buildTicketCard(o, wasPrinted) {
+  const dateStr = o.createdAt?.toDate
+    ? o.createdAt.toDate().toLocaleTimeString("es-MX", {hour:"2-digit",minute:"2-digit"})
+    : "—";
+  const dateFull = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleDateString("es-MX") : "—";
+  const numLines = (o.lines||[]).length;
+  const numUnid  = (o.lines||[]).reduce((s,l) => s + (l.qty||0), 0);
   const rows = (o.lines||[]).map(l =>
     `<tr><td>${l.emoji||"📦"} ${esc(l.name)}</td>
          <td style="text-align:center;padding:0 .5rem;">${l.qty}</td>
          <td>$${(+(l.subtotal||0)).toFixed(2)}</td></tr>`).join("");
   return `
-  <div class="ticket-card ${sc}">
-    <div class="ticket-head">
-      <div>
-        <div class="ticket-store">${esc(o.customerName)}</div>
-        <div class="ticket-meta">📅 ${dateStr}${o.address?` · 📍 ${esc(o.address)}`:""}</div>
-        <div class="ticket-meta">Estado: <strong>${o.status||"Entregado"}</strong> · #${(o.id||"").slice(-6).toUpperCase()}${o.vendedorFolio ? ` · 🧑‍💼 ${esc(o.vendedorFolio)}` : ""}</div>
+  <div class="tix-order-card">
+    <div class="tix-order-top" onclick="this.closest('.tix-order-card').classList.toggle('open')">
+      <div class="tix-order-main">
+        <div class="tix-order-folio-row">
+          <span class="tix-order-folio">#${(o.id||"").slice(-6).toUpperCase()}</span>
+          ${o.vendedorFolio ? `<span class="tix-order-vend">🧑‍💼 ${esc(o.vendedorFolio)}</span>` : ""}
+          ${wasPrinted ? `<span class="hist-status-pill entregado">✓ Impreso</span>` : ""}
+        </div>
+        <div class="tix-order-meta">🏪 ${esc(o.customerName)} · ${dateFull} ${dateStr} · ${numLines} producto${numLines!==1?"s":""} (${numUnid} uds.)</div>
       </div>
-      <button class="ticket-print-btn" onclick="printOneTicket('${o.id}')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Imprimir
-      </button>
+      <div class="tix-order-right">
+        <div class="tix-order-amt">$${(+o.total).toFixed(2)}</div>
+        <svg class="tix-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
     </div>
-    <div class="ticket-body">
-      <table class="ticket-lines-table">
-        <thead><tr><th>Producto</th><th style="text-align:center">Cant.</th><th style="text-align:right">Subtotal</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <div class="ticket-total-bar">
-        <span>TOTAL</span><span class="amount">$${(+o.total).toFixed(2)}</span>
+    <div class="tix-order-detail">
+      <div class="ticket-body">
+        <table class="ticket-lines-table">
+          <thead><tr><th>Producto</th><th style="text-align:center">Cant.</th><th style="text-align:right">Subtotal</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="ticket-total-bar">
+          <span>TOTAL</span><span class="amount">$${(+o.total).toFixed(2)}</span>
+        </div>
+        <button class="ticket-print-btn" style="margin-top:.6rem;" onclick="event.stopPropagation();printOneTicket('${o.id}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir Ticket
+        </button>
       </div>
     </div>
   </div>`;
@@ -5102,20 +5334,27 @@ function printOneTicket(orderId) {
   const o = orders.find(x => x.id === orderId);
   if (!o) return;
   doPrint(buildTicketPrint(o));
+  markTicketPrinted(orderId);
+  renderTickets();
 }
 
 function printAllTickets() {
   const statusFilter = (document.getElementById("ticket-filter-status")||{}).value || "";
   const storeFilter  = (document.getElementById("ticket-filter-store")||{}).value  || "";
+  const vendFilter   = (document.getElementById("ticket-filter-vendedor")||{}).value || "";
   const filtered = orders.filter(o => {
     if (statusFilter && o.status !== statusFilter) return false;
     if (storeFilter  && o.customerName !== storeFilter) return false;
+    if (vendFilter   && o.vendedorId !== vendFilter) return false;
     return true;
   });
   if (!filtered.length) { toast("⚠ Sin tickets para imprimir"); return; }
-  const summary = getPendientesSummary(filtered);
+  const todayFiltered = filtered.filter(isOrderToday);
+  const summary = getPendientesSummary(todayFiltered);
   const summaryHtml = summary.length ? buildPendientesPrint(summary) : "";
   doPrint(summaryHtml + filtered.map(o => buildTicketPrint(o)).join(""));
+  filtered.forEach(o => markTicketPrinted(o.id));
+  renderTickets();
 }
 
 function getThermalSize() {
